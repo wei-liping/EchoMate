@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 data/simulated_cases.py)",
+      "Bash(chmod +x /Users/lipingwei/Downloads/ai_date_with_ta/cli.py)",
+      "Bash(python3 -m py_compile engine.py)",
+      "Bash(python3 -m py_compile cli.py)",
+      "Bash(python cli.py --help)",
+      "Bash(/Users/lipingwei/Downloads/ai_date_with_ta/requirements.txt:*)",
+      "Bash(python cli.py config --list-providers)",
+      "Bash(python3 -m py_compile main.py)"
+    ]
+  }
+}
