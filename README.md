@@ -1,10 +1,10 @@
-# 婚恋 AI Agent - 基于成就动机理论的对话分析助手
+# 聊天 Debug (Chat-lock Debugger) AI agent v1.1
 
 <div align="center">
 
 **成就动机理论 × 归因训练 × 物理建模思维**
 
-一个生产级的 AI Agent 工具，帮助婚恋平台用户突破对话冷场困境
+一个生产级的 AI Agent 工具，帮助突破聊天冷场困境
 
 [快速开始](#快速开始) • [支持的模型](#支持的模型) • [使用方法](#使用方法) • [API 文档](#api-文档)
 
@@ -16,7 +16,7 @@
 
 ### 痛点分析
 
-传统婚恋平台用户常因以下心理困境导致对话冷场：
+传统聊天场景常因以下心理困境导致对话冷场：
 
 | 心理现象 | 表现形式 | 影响 |
 |---------|---------|------|
@@ -215,7 +215,7 @@ for s in result.generation.suggestions:
 
 ```python
 class DatingAgentEngine:
-    """婚恋 AI Agent 核心引擎"""
+    """聊天 Debug 核心引擎"""
 
     def __init__(self, model_provider: str, api_key: Optional[str]):
         """
@@ -258,6 +258,12 @@ python data/simulated_cases.py
 - 平均对话轮次增加：+4.4 轮
 - 平均焦虑值降低：-3.2 分
 - 回复延迟降低率：76%
+
+<div style='text-align: center; color: gray; font-size: 0.9em;'>
+
+聊天 Debug (Chat-lock Debugger) AI agent v1.1 | 基于成就动机理论 × 归因训练 × 物理建模思维
+
+</div>
 
 ---
 

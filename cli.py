@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-婚恋 AI Agent - CLI 命令行工具
+聊天 Debug (Chat-lock Debugger) AI agent v1.1 - CLI 命令行工具
 快速分析对话，获取建议
 """
 
@@ -210,7 +210,7 @@ def main():
     providers_list = ', '.join(MODEL_CONFIGS.keys())
 
     parser = argparse.ArgumentParser(
-        description="婚恋 AI Agent - 对话分析助手",
+        description="聊天 Debug (Chat-lock Debugger) AI agent v1.1 - 对话分析助手",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"""
 支持的模型提供商:

@@ -1,5 +1,5 @@
 """
-婚恋 AI Agent - Streamlit 应用
+聊天 Debug (Chat-lock Debugger) AI agent v1.1 - Streamlit 应用
 生产级对话分析助手
 """
 
@@ -10,13 +10,190 @@ from typing import Dict, List, Optional
 
 from engine import DatingAgentEngine, AnalysisResult, MODEL_CONFIGS
 
+
+# =============================================================================
+# 导出功能
+# =============================================================================
+
+def generate_export_markdown(result: AnalysisResult) -> str:
+    """
+    生成可导出的 Markdown 格式分析报告
+
+    Args:
+        result: 分析结果对象
+
+    Returns:
+        Markdown 格式的字符串
+    """
+    md = f"""# 聊天 Debug 分析报告
+
+**生成时间:** {result.timestamp}
+
+---
+
+## 提问内容
+
+{result.user_input}
+
+---
+
+## 分析结果
+
+### 感知层 (Perception Layer)
+
+| 指标 | 值 |
+|------|-----|
+| 焦虑水平 | {result.perception.anxiety_level}/10 |
+| 置信度 | {result.perception.confidence_score:.0%} |
+
+**心理标签:**
+"""
+    for tag in result.perception.psychological_tags:
+        md += f"- {tag}\n"
+
+    if result.perception.self_handicapping_detected:
+        md += "\n⚠️ **自我妨碍倾向:** 检测到\n"
+
+    md += "\n**回避指标:**\n"
+    if result.perception.avoidance_indicators:
+        for indicator in result.perception.avoidance_indicators:
+            md += f"- {indicator}\n"
+    else:
+        md += "- 未检测到明显回避行为\n"
+
+    md += f"""
+### 推理层 (Reasoning Layer)
+
+| 指标 | 值 |
+|------|-----|
+| 对话阶段 | {result.reasoning.dialogue_stage} |
+| 动量状态 | {result.reasoning.dialogue_momentum} |
+| 置信度 | {result.reasoning.confidence_score:.0%} |
+
+**僵局成因:** {result.reasoning.stagnation_cause}
+
+**归因模式:** {result.reasoning.attribution_pattern}
+
+**推荐策略:** {result.reasoning.recommended_strategy}
+
+**阻力因素:**
+"""
+    if result.reasoning.resistance_factors:
+        for factor in result.reasoning.resistance_factors:
+            md += f"- {factor}\n"
+    else:
+        md += "- 无明显阻力\n"
+
+    md += """
+### 对话建议
+
+"""
+    for i, suggestion in enumerate(result.generation.suggestions, 1):
+        md += f"""#### 建议 {i}
+
+**话术:**
+```
+{suggestion.script}
+```
+
+**策略说明:** {suggestion.rationale}
+
+**预期反应:** {suggestion.expected_response}
+
+**难度:** {suggestion.difficulty_level} | **阶段匹配:** {suggestion.alignment_with_stage}
+
+---
+"""
+
+    md += f"""## 心理引导
+
+**归因重构:** {result.generation.meta_guidance.attribution_reframe}
+
+**信心建立:** {result.generation.meta_guidance.confidence_builder}
+
+---
+
+*报告由 聊天 Debug (Chat-lock Debugger) AI agent v1.1 生成*
+"""
+    return md
+
+
+def generate_export_text(result: AnalysisResult) -> str:
+    """
+    生成纯文本格式的分析报告（用于 PDF 生成或简单导出）
+
+    Args:
+        result: 分析结果对象
+
+    Returns:
+        纯文本格式的字符串
+    """
+    lines = [
+        "=" * 60,
+        "聊天 Debug 分析报告",
+        "=" * 60,
+        f"生成时间：{result.timestamp}",
+        "",
+        "=" * 60,
+        "提问内容",
+        "=" * 60,
+        result.user_input,
+        "",
+        "=" * 60,
+        "分析结果",
+        "=" * 60,
+        "",
+        "--- 感知层 (Perception Layer) ---",
+        f"焦虑水平：{result.perception.anxiety_level}/10",
+        f"置信度：{result.perception.confidence_score:.0%}",
+        f"心理标签：{', '.join(result.perception.psychological_tags)}",
+    ]
+
+    if result.perception.self_handicapping_detected:
+        lines.append("⚠️ 自我妨碍倾向：检测到")
+
+    lines.extend([
+        "",
+        "--- 推理层 (Reasoning Layer) ---",
+        f"对话阶段：{result.reasoning.dialogue_stage}",
+        f"动量状态：{result.reasoning.dialogue_momentum}",
+        f"僵局成因：{result.reasoning.stagnation_cause}",
+        f"归因模式：{result.reasoning.attribution_pattern}",
+        f"推荐策略：{result.reasoning.recommended_strategy}",
+        "",
+        "--- 对话建议 ---",
+    ])
+
+    for i, suggestion in enumerate(result.generation.suggestions, 1):
+        lines.extend([
+            "",
+            f"[建议 {i}]",
+            f"话术：{suggestion.script}",
+            f"策略说明：{suggestion.rationale}",
+            f"预期反应：{suggestion.expected_response}",
+        ])
+
+    lines.extend([
+        "",
+        "=" * 60,
+        "心理引导",
+        "=" * 60,
+        f"归因重构：{result.generation.meta_guidance.attribution_reframe}",
+        f"信心建立：{result.generation.meta_guidance.confidence_builder}",
+        "",
+        "=" * 60,
+    ])
+
+    return "\n".join(lines)
+
+
 # =============================================================================
 # 页面配置
 # =============================================================================
 
 st.set_page_config(
-    page_title="婚恋 AI Agent - 对话分析助手",
-    page_icon="💬",
+    page_title="聊天 Debug (Chat-lock Debugger) AI agent v1.1",
+    page_icon="🔓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -158,13 +335,40 @@ with st.sidebar:
                 mime="application/json"
             )
 
+    # 导出当前分析结果（MD/TXT）
+    if st.session_state.get("last_analysis") is not None:
+        result = st.session_state.last_analysis
+
+        # 生成 MD 内容
+        md_content = generate_export_markdown(result)
+        # 生成 TXT 内容
+        txt_content = generate_export_text(result)
+
+        col_md1, col_md2 = st.columns(2)
+        with col_md1:
+            st.download_button(
+                label="📥 导出为 MD",
+                data=md_content,
+                file_name=f"chat_debug_report_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+        with col_md2:
+            st.download_button(
+                label="📥 导出为 TXT",
+                data=txt_content,
+                file_name=f"chat_debug_report_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+                mime="text/plain",
+                use_container_width=True
+            )
+
     st.markdown("---")
     st.markdown("### 关于")
     st.markdown("""
-    **婚恋 AI Agent** v1.0
+    **聊天 Debug (Chat-lock Debugger) AI agent v1.1**
 
     基于成就动机理论与归因训练原理，
-    帮助婚恋平台用户突破对话冷场困境。
+    帮助突破聊天冷场困境。
 
     **核心理论:**
     - 成就动机理论
@@ -235,9 +439,9 @@ if st.session_state.prev_config != current_config:
 # 主界面
 # =============================================================================
 
-st.title("💬 婚恋 AI Agent - 对话分析助手")
+st.title("🔓 聊天 Debug (Chat-lock Debugger) AI agent v1.1")
 st.markdown("""
-基于**成就动机理论**与**归因训练**原理，帮助您突破对话冷场困境。
+基于**成就动机理论**与**归因训练**原理，帮助您突破聊天冷场困境。
 
 输入您的对话内容或描述当前情境，获取专业心理学分析的对话建议。
 """)
@@ -315,14 +519,42 @@ if analyze_btn and user_input and st.session_state.engine:
     if not api_key and model_provider != "ollama":
         st.error("⚠️ 请先在侧边栏输入 API Key")
     else:
-        with st.spinner("🔍 正在进行三层分析...\n\n感知层 → 推理层 → 生成层"):
+        with st.status("🔄 正在执行三层分析...", expanded=True) as status:
             try:
-                # 执行分析
+                # 进度条和状态标签
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                # 第 1 步：感知层分析
+                status_text.markdown("**🧠 感知层** - 正在分析心理指标...")
+                progress_bar.progress(10)
+
                 result = st.session_state.engine.analyze(
                     user_input=user_input,
                     conversation_history=st.session_state.conversation_history
                 )
 
+                # 感知层完成
+                progress_bar.progress(33)
+                status_text.markdown("**✅ 🧠 感知层** - 完成")
+
+                # 第 2 步：推理层分析
+                status_text.markdown("**🤖 推理层** - 正在分析对话状态...")
+                progress_bar.progress(50)
+
+                # 推理层完成（结果已在 analyze 中返回）
+                progress_bar.progress(66)
+                status_text.markdown("**✅ 🤖 推理层** - 完成")
+
+                # 第 3 步：生成层分析
+                status_text.markdown("**💡 生成层** - 正在生成对话建议...")
+                progress_bar.progress(80)
+
+                # 生成层完成（结果已在 analyze 中返回）
+                progress_bar.progress(100)
+                status_text.markdown("**✅ 💡 生成层** - 完成")
+
+                # 分析完成
                 st.session_state.last_analysis = result
                 st.session_state.analysis_history.append({
                     "timestamp": datetime.now().isoformat(),
@@ -338,10 +570,13 @@ if analyze_btn and user_input and st.session_state.engine:
                     "suggestions_count": len(result.generation.suggestions)
                 })
 
-                st.success("✅ 分析完成！")
+                status.update(label="✅ 分析完成！", state="complete")
+                status_text.empty()
+                progress_bar.empty()
 
             except Exception as e:
-                st.error(f"❌ 分析失败：{str(e)}")
+                status.update(label="❌ 分析失败", state="error")
+                st.error(f"分析失败：{str(e)}")
                 st.info("请检查 API Key 是否正确，或尝试更换模型提供商")
 
 elif analyze_btn and not st.session_state.engine:
@@ -495,7 +730,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: gray; font-size: 0.9em;'>
 
-婚恋 AI Agent v1.0 | 基于成就动机理论 × 归因训练 × 物理建模思维
+聊天 Debug (Chat-lock Debugger) AI agent v1.1 | 基于成就动机理论 × 归因训练 × 物理建模思维
 
 </div>
 """, unsafe_allow_html=True)

@@ -1,5 +1,5 @@
 """
-婚恋 AI Agent - 核心引擎
+聊天 Debug (Chat-lock Debugger) AI agent v1.1 - 核心引擎
 基于成就动机理论的三层式 Prompt 链分析引擎
 
 支持的模型提供商：
@@ -173,7 +173,7 @@ class AnalysisResult:
 
 class DatingAgentEngine:
     """
-    婚恋 AI Agent 核心引擎
+    聊天 Debug (Chat-lock Debugger) AI agent v1.1 核心引擎
 
     基于成就动机理论、自我妨碍理论和归因训练原理，
     通过三层式 Prompt 链分析用户对话，生成具体可执行的建议。
@@ -477,7 +477,7 @@ class DatingAgentEngine:
         }
 
         try:
-            response = requests.post(url, headers=headers, json=payload, timeout=60)
+            response = requests.post(url, headers=headers, json=payload, timeout=120)
             response.raise_for_status()
             data = response.json()
 
@@ -490,9 +490,19 @@ class DatingAgentEngine:
                 raise ValueError(f"API 响应格式异常：{data}")
 
         except requests.exceptions.Timeout:
-            raise TimeoutError("API 请求超时，请检查网络连接或重试")
+            raise TimeoutError("API 请求超时 (120 秒)，可能原因：\n1. 网络连接不稳定\n2. API 服务响应慢\n3. 请检查 API Key 是否正确")
         except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"API 请求失败：{str(e)}")
+            error_msg = str(e)
+            if "401" in error_msg:
+                raise RuntimeError("API Key 无效，请检查配置")
+            elif "403" in error_msg:
+                raise RuntimeError("API Key 无权限或 IP 被限制")
+            elif "429" in error_msg:
+                raise RuntimeError("API 请求频率超限，请稍后再试")
+            elif "500" in error_msg:
+                raise RuntimeError("API 服务内部错误，请稍后再试")
+            else:
+                raise RuntimeError(f"API 请求失败：{str(e)}")
 
     def _call_anthropic(self, prompt: str, system_prompt: str) -> str:
         """调用 Anthropic API"""
@@ -514,14 +524,24 @@ class DatingAgentEngine:
         }
 
         try:
-            response = requests.post(url, headers=headers, json=payload, timeout=60)
+            response = requests.post(url, headers=headers, json=payload, timeout=120)
             response.raise_for_status()
             data = response.json()
             return data["content"][0]["text"]
         except requests.exceptions.Timeout:
-            raise TimeoutError("API 请求超时，请检查网络连接或重试")
+            raise TimeoutError("API 请求超时 (120 秒)，可能原因：\n1. 网络连接不稳定\n2. API 服务响应慢\n3. 请检查 API Key 是否正确")
         except requests.exceptions.RequestException as e:
-            raise RuntimeError(f"API 请求失败：{str(e)}")
+            error_msg = str(e)
+            if "401" in error_msg:
+                raise RuntimeError("API Key 无效，请检查配置")
+            elif "403" in error_msg:
+                raise RuntimeError("API Key 无权限或 IP 被限制")
+            elif "429" in error_msg:
+                raise RuntimeError("API 请求频率超限，请稍后再试")
+            elif "500" in error_msg:
+                raise RuntimeError("API 服务内部错误，请稍后再试")
+            else:
+                raise RuntimeError(f"API 请求失败：{str(e)}")
 
     def _call_ollama(self, prompt: str, system_prompt: str) -> str:
         """调用 Ollama API（本地模型）"""
@@ -577,7 +597,11 @@ class DatingAgentEngine:
                 raise ValueError(f"JSON 解析失败")
         raise ValueError(f"无法从响应中提取 JSON")
 
-    def analyze(self, user_input: str, conversation_history: Optional[List[Dict[str, str]]] = None) -> AnalysisResult:
+    def analyze(
+        self,
+        user_input: str,
+        conversation_history: Optional[List[Dict[str, str]]] = None
+    ) -> AnalysisResult:
         """
         执行三层式对话分析
 
