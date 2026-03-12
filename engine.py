@@ -21,6 +21,8 @@ from dataclasses import dataclass, asdict
 from datetime import datetime
 from enum import Enum
 
+from prompts.system_prompts import PERCEPTION_LAYER_PROMPT, REASONING_LAYER_PROMPT, GENERATION_LAYER_PROMPT
+
 
 # ==================== 模型配置 ====================
 
@@ -169,6 +171,8 @@ class AnalysisResult:
     timestamp: str
     user_input: str
     conversation_history: List[Dict[str, str]]
+    user_mbti: Optional[str] = None
+    other_mbti: Optional[str] = None
 
 
 class DatingAgentEngine:
@@ -179,205 +183,10 @@ class DatingAgentEngine:
     通过三层式 Prompt 链分析用户对话，生成具体可执行的建议。
     """
 
-    # ==================== Prompt 模板 ====================
-
-    PERCEPTION_LAYER_PROMPT = """
-# Role: 心理学 AI 分析师 - 感知层
-
-## 任务描述
-你是一位精通成就动机理论和自我妨碍（Self-Handicapping）理论的心理学分析师。
-你的任务是分析用户的对话输入，识别其中的心理指标。
-
-## 分析维度
-
-### 1. 回避型措辞识别 (Avoidance Language)
-检测以下模式：
-- 模糊化表达："可能"、"也许"、"不太确定"
-- 自我贬低前置："我不太会聊天，但是..."
-- 话题转移尝试：主动改变话题以回避深度交流
-- 延迟回复倾向：表达"不知道该怎么说"
-
-### 2. 过度补偿行为 (Overcompensation)
-检测以下模式：
-- 过度解释：对简单问题给出冗长回答
-- 讨好性表达：频繁使用"您觉得呢？""您说呢？"
-- 完美主义倾向：反复修改自己的表述
-
-### 3. 社交防御机制 (Social Defense)
-检测以下模式：
-- 预设失败："反正我这样的人..."
-- 归因外化："可能是因为...才这样"
-- 情感隔离：用理性分析回避情感表达
-
-## 输出格式
-请严格按照以下 JSON 格式输出（仅输出 JSON，不要其他内容）：
-
-{
-    "anxiety_level": <1-10 的整数>,
-    "psychological_tags": ["标签 1", "标签 2"],
-    "avoidance_indicators": ["具体引用或描述"],
-    "self_handicapping_detected": <true/false>,
-    "confidence_score": <0.0-1.0 的浮点数>
-}
-
-## 可用标签列表
-- "回避型依恋"
-- "自我妨碍倾向"
-- "社交焦虑"
-- "完美主义"
-- "讨好型沟通"
-- "情感隔离"
-- "归因外化"
-- "低自我效能感"
-
-## 用户输入
-{{user_input}}
-
-## 对话历史
-{{conversation_history}}
-
-## 分析要求
-1. 先进行内部推理，分析用户表达中的关键语言模式
-2. 基于成就动机理论，判断用户是将社交视为"挑战"还是"威胁"
-3. 输出结构化 JSON 结果
-"""
-
-    REASONING_LAYER_PROMPT = """
-# Role: 心理学 AI 推理师 - 推理层
-
-## 任务描述
-你是一位结合物理建模思维与心理学的推理专家。
-你将接收感知层的分析结果，并判断当前对话所处的阶段及僵局成因。
-
-## 物理建模思维框架
-将对话状态视为一个受外力影响的动态系统：
-- **动量（Momentum）**: 对话的自然推进力
-- **阻力（Resistance）**: 心理防御、焦虑等阻碍因素
-- **外力（External Force）**: AI 干预、环境变化等
-
-## 对话阶段判断
-
-### 阶段 1: 破冰期 (Ice-breaking Phase)
-特征：
-- 双方首次或前 3 轮对话
-- 话题以基本信息交换为主
-- 社交规范主导互动
-
-### 阶段 2: 信息交换期 (Information Exchange Phase)
-特征：
-- 已有基础了解
-- 话题深入至兴趣、价值观
-- 开始试探性自我暴露
-
-### 阶段 3: 情感共振期 (Emotional Resonance Phase)
-特征：
-- 话题涉及情感体验
-- 双方有共情回应
-- 互动具有自发性
-
-## 僵局成因分析（基于自我妨碍理论）
-
-| 成因类型 | 表现 | 归因模式 |
-|---------|------|---------|
-| 策略性自我妨碍 | 故意不努力，为失败留借口 | "我没认真而已" |
-| 行为性自我妨碍 | 制造实际障碍（如拖延回复） | "刚好有事" |
-| 归因偏差 | 将成功归因于运气，失败归因于能力 | "只是运气好" |
-| 低成就动机 | 回避挑战，选择确定性高的互动 | "不想太复杂" |
-
-## 输入数据
-- 焦虑值：{{anxiety_level}}
-- 心理标签：{{psychological_tags}}
-- 回避指标：{{avoidance_indicators}}
-- 对话历史：{{conversation_history}}
-- 当前对话：{{current_turn}}
-
-## 输出格式
-请严格按照以下 JSON 格式输出（仅输出 JSON，不要其他内容）：
-
-{
-    "dialogue_stage": "<破冰期/信息交换期/情感共振期>",
-    "dialogue_momentum": "<正向/中性/负向>",
-    "resistance_factors": ["阻力因素 1", "阻力因素 2"],
-    "stagnation_cause": "<具体成因描述>",
-    "attribution_pattern": "<用户的归因模式>",
-    "recommended_strategy": "<干预策略：降低难度/重构认知/提供话术>",
-    "confidence_score": <0.0-1.0>
-}
-
-## 分析要求
-1. 结合物理建模思维，分析对话的"动量"与"阻力"平衡
-2. 基于成就动机理论，判断用户当前的动机状态
-3. 输出结构化 JSON 结果
-"""
-
-    GENERATION_LAYER_PROMPT = """
-# Role: 对话策略生成师 - 生成层
-
-## 任务描述
-你是一位精通认知负荷理论和成就动机训练的对话策略专家。
-你的任务是生成具体、可立即发送的对话建议，帮助用户突破冷场困境。
-
-## 核心原则
-
-### 1. 降低认知负荷 (Cognitive Load Reduction)
-- 话术必须具体到可直接复制发送
-- 避免抽象建议如"多关心对方"
-- 提供完整的句式结构
-
-### 2. 成就动机引导 (Achievement Motivation Framing)
-- 将对话框定为"可练习的技能"
-- 强调努力与进步，而非天赋
-- 使用成长型思维语言
-
-### 3. 归因训练 (Attribution Training)
-- 引导用户将冷场归因为"策略问题"而非"能力问题"
-- 提供替代性策略选项
-- 避免人格层面的自我否定
-
-## 输入数据
-- 对话阶段：{{dialogue_stage}}
-- 动量状态：{{dialogue_momentum}}
-- 阻力因素：{{resistance_factors}}
-- 僵局成因：{{stagnation_cause}}
-- 推荐策略：{{recommended_strategy}}
-- 焦虑水平：{{anxiety_level}}
-
-## 输出要求
-
-### 建议数量
-提供 2-3 条建议，按推荐度排序。
-
-### 建议结构
-每条建议应包含：
-1. **话术文本**：可直接发送的完整句子
-2. **策略说明**：为什么这样说有效（1 句话）
-3. **预期反应**：对方可能的回应方向
-
-### 语言风格
-- 自然、口语化
-- 避免过度正式或刻意
-- 符合中文社交习惯
-
-## 输出格式
-请严格按照以下 JSON 格式输出（仅输出 JSON，不要其他内容）：
-
-{
-    "suggestions": [
-        {
-            "id": 1,
-            "script": "<可直接发送的话术>",
-            "rationale": "<策略说明>",
-            "expected_response": "<预期反应>",
-            "difficulty_level": "<低/中/高>",
-            "alignment_with_stage": "<为何符合当前对话阶段>"
-        }
-    ],
-    "meta_guidance": {
-        "attribution_reframe": "<帮助用户重构对冷场的归因>",
-        "confidence_builder": "<一句建立信心的话>"
-    }
-}
-"""
+    # Prompt 模板从 prompts.system_prompts 模块导入
+    # - PERCEPTION_LAYER_PROMPT
+    # - REASONING_LAYER_PROMPT
+    # - GENERATION_LAYER_PROMPT
 
     def __init__(
         self,
@@ -600,7 +409,9 @@ class DatingAgentEngine:
     def analyze(
         self,
         user_input: str,
-        conversation_history: Optional[List[Dict[str, str]]] = None
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        user_mbti: Optional[str] = None,
+        other_mbti: Optional[str] = None
     ) -> AnalysisResult:
         """
         执行三层式对话分析
@@ -608,11 +419,22 @@ class DatingAgentEngine:
         Args:
             user_input: 用户当前输入/想分析的对话内容
             conversation_history: 对话历史列表，每项包含 {"role": "user/other", "content": "..."}
+            user_mbti: 用户的 MBTI 类型（可选）
+            other_mbti: 对方的 MBTI 类型（可选）
 
         Returns:
             AnalysisResult: 完整分析结果
         """
         conversation_history = conversation_history or []
+
+        # 构建 MBTI 相关信息
+        mbti_info = ""
+        if user_mbti and user_mbti != "未填写" and other_mbti and other_mbti != "未填写":
+            mbti_info = f"\n\n## MBTI 性格信息\n- 用户 MBTI: {user_mbti}\n- 对方 MBTI: {other_mbti}\n\n请在分析中考虑双方性格差异对沟通方式的影响。"
+        elif user_mbti and user_mbti != "未填写":
+            mbti_info = f"\n\n## MBTI 性格信息\n- 用户 MBTI: {user_mbti}\n\n请在分析中考虑用户的性格特点。"
+        elif other_mbti and other_mbti != "未填写":
+            mbti_info = f"\n\n## MBTI 性格信息\n- 对方 MBTI: {other_mbti}\n\n请在分析中考虑对方的性格特点。"
 
         # Step 1: 感知层分析
         perception_prompt = self.PERCEPTION_LAYER_PROMPT.replace(
@@ -620,6 +442,8 @@ class DatingAgentEngine:
         ).replace(
             "{{conversation_history}}",
             str(conversation_history[-5:]) if conversation_history else "无"
+        ).replace(
+            "{{mbti_info}}", mbti_info if mbti_info else "无"
         )
 
         perception_text = self._call_llm(
@@ -647,6 +471,8 @@ class DatingAgentEngine:
             "{{conversation_history}}", str(conversation_history[-5:]) if conversation_history else "无"
         ).replace(
             "{{current_turn}}", user_input
+        ).replace(
+            "{{mbti_info}}", mbti_info if mbti_info else "无"
         )
 
         reasoning_text = self._call_llm(
@@ -678,6 +504,8 @@ class DatingAgentEngine:
             "{{recommended_strategy}}", reasoning.recommended_strategy
         ).replace(
             "{{anxiety_level}}", str(perception.anxiety_level)
+        ).replace(
+            "{{mbti_info}}", mbti_info if mbti_info else "无"
         )
 
         generation_text = self._call_llm(
@@ -716,7 +544,9 @@ class DatingAgentEngine:
             generation=generation,
             timestamp=datetime.now().isoformat(),
             user_input=user_input,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            user_mbti=user_mbti if user_mbti != "未填写" else None,
+            other_mbti=other_mbti if other_mbti != "未填写" else None
         )
 
     def analyze_quick(self, user_input: str) -> Dict:

@@ -63,6 +63,9 @@ PERCEPTION_LAYER_PROMPT = """
 ## 对话历史（可选）
 {{conversation_history}}
 
+## MBTI 性格信息（可选）
+{{mbti_info}}
+
 ## 分析要求
 1. 先进行内部推理，分析用户表达中的关键语言模式
 2. 基于成就动机理论，判断用户是将社交视为"挑战"还是"威胁"
@@ -108,6 +111,13 @@ REASONING_LAYER_PROMPT = """
 - 双方有共情回应
 - 互动具有自发性
 
+## MBTI 性格兼容性分析（如提供）
+如果提供了双方 MBTI 信息，请考虑：
+- **内向 (I) vs 外向 (E)**: 能量来源和社交偏好差异
+- **感知 (S) vs 直觉 (N)**: 信息处理和关注点差异
+- **思考 (T) vs 情感 (F)**: 决策方式和价值观差异
+- **判断 (J) vs 知觉 (P)**: 计划性和灵活性差异
+
 ## 僵局成因分析（基于自我妨碍理论）
 
 | 成因类型 | 表现 | 归因模式 |
@@ -123,6 +133,7 @@ REASONING_LAYER_PROMPT = """
 - 回避指标：{{avoidance_indicators}}
 - 对话历史：{{conversation_history}}
 - 当前对话：{{current_turn}}
+- MBTI 信息：{{mbti_info}}
 
 ## 输出格式
 请严格按照以下 JSON 格式输出：
@@ -140,7 +151,8 @@ REASONING_LAYER_PROMPT = """
 ## 分析要求
 1. 结合物理建模思维，分析对话的"动量"与"阻力"平衡
 2. 基于成就动机理论，判断用户当前的动机状态
-3. 输出结构化 JSON 结果
+3. 如有 MBTI 信息，考虑性格差异对沟通的影响
+4. 输出结构化 JSON 结果
 """
 
 
@@ -173,6 +185,11 @@ GENERATION_LAYER_PROMPT = """
 - 提供替代性策略选项
 - 避免人格层面的自我否定
 
+### 4. MBTI 性格匹配建议（如提供）
+- 根据用户 MBTI 特点调整建议难度
+- 根据对方 MBTI 特点调整沟通方式
+- 考虑双方性格差异提供兼容性建议
+
 ## 输入数据
 - 对话阶段：{{dialogue_stage}}
 - 动量状态：{{dialogue_momentum}}
@@ -180,6 +197,7 @@ GENERATION_LAYER_PROMPT = """
 - 僵局成因：{{stagnation_cause}}
 - 推荐策略：{{recommended_strategy}}
 - 焦虑水平：{{anxiety_level}}
+- MBTI 信息：{{mbti_info}}
 
 ## 输出要求
 

@@ -1,14 +1,65 @@
 """
 聊天 Debug (Chat-lock Debugger) AI agent v1.1 - Streamlit 应用
 生产级对话分析助手
+
+环境变量支持（用于 GitHub Secrets / Streamlit Cloud 部署）：
+- DEFAULT_PROVIDER: 默认模型提供商 (默认：qwen)
+- API_KEY: API Key
+- MODEL_NAME: 自定义模型名称
+- BASE_URL: 自定义 API 基础 URL
 """
 
 import streamlit as st
 import json
+import os
 from datetime import datetime
 from typing import Dict, List, Optional
 
 from engine import DatingAgentEngine, AnalysisResult, MODEL_CONFIGS
+
+
+# =============================================================================
+# MBTI 性格类型定义
+# =============================================================================
+
+MBTI_TYPES = [
+    "ISTJ", "ISFJ", "INFJ", "INTJ",
+    "ISTP", "ISFP", "INFP", "INTP",
+    "ESTP", "ESFP", "ENFP", "ENTP",
+    "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+]
+
+MBTI_DESCRIPTIONS = {
+    "ISTJ": "物流师型 - 务实、有条理、可靠",
+    "ISFJ": "守卫者型 - 温暖、体贴、有责任感",
+    "INFJ": "提倡者型 - 理想主义、富有洞察力",
+    "INTJ": "建筑师型 - 战略思维、独立自主",
+    "ISTP": "鉴赏家型 - 灵活、动手能力强",
+    "ISFP": "探险家型 - 温和、敏感、审美佳",
+    "INFP": "调停者型 - 理想主义、富有同情心",
+    "INTP": "逻辑学家型 - 好奇、创新、重逻辑",
+    "ESTP": "企业家型 - 活力充沛、敢冒风险",
+    "ESFP": "表演者型 - 热情、爱社交、活泼",
+    "ENFP": "竞选者型 - 热情、有创造力、善于社交",
+    "ENTP": "辩论家型 - 聪明、好奇、喜欢挑战",
+    "ESTJ": "总经理型 - 高效、注重秩序、领导力强",
+    "ESFJ": "执政官型 - 关心他人、受欢迎、合作",
+    "ENFJ": "主人公型 - 有魅力、善于领导、助人",
+    "ENTJ": "指挥官型 - 果断、战略眼光、高效",
+}
+
+# MBTI 兼容性简要说明
+MBTI_COMPATIBILITY_HINT = """
+💡 **MBTI 性格匹配提示**
+
+不同性格类型在沟通方式上有差异：
+- **内向 (I) vs 外向 (E)**: 能量来源不同，I 需要独处，E 需要社交
+- **感知 (S) vs 直觉 (N)**: 信息处理不同，S 重事实，N 重可能性
+- **思考 (T) vs 情感 (F)**: 决策方式不同，T 重逻辑，F 重感受
+- **判断 (J) vs 知觉 (P)**: 生活方式不同，J 重计划，P 重灵活
+
+选择双方的 MBTI 类型，AI 将给出更有针对性的沟通建议。
+"""
 
 
 # =============================================================================
@@ -29,7 +80,18 @@ def generate_export_markdown(result: AnalysisResult) -> str:
 
 **生成时间:** {result.timestamp}
 
----
+"""
+
+    # MBTI 信息（如有）
+    if result.user_mbti or result.other_mbti:
+        md += "## MBTI 性格分析\n\n"
+        if result.user_mbti:
+            md += f"- **你的 MBTI**: {result.user_mbti}\n"
+        if result.other_mbti:
+            md += f"- **对方的 MBTI**: {result.other_mbti}\n"
+        md += "\n"
+
+    md += f"""---
 
 ## 提问内容
 
@@ -234,6 +296,16 @@ with st.sidebar:
 
     st.markdown("### 模型设置")
 
+    # 检查环境变量（用于 GitHub Secrets / Streamlit Cloud 部署）
+    env_api_key = os.getenv("API_KEY")
+    env_provider = os.getenv("DEFAULT_PROVIDER", "qwen")
+    env_model_name = os.getenv("MODEL_NAME")
+    env_base_url = os.getenv("BASE_URL")
+
+    if env_api_key:
+        st.success("✅ 已从环境变量加载 API 配置")
+        st.caption("配置来源：GitHub Secrets / Streamlit Cloud Secrets")
+
     # 获取所有可用的模型提供商
     providers = DatingAgentEngine.get_available_providers()
     provider_options = {p["name"]: p["key"] for p in providers}
@@ -248,10 +320,16 @@ with st.sidebar:
     st.markdown("**本地部署**")
     st.caption("Ollama, 自定义 API")
 
+    # 如果有环境变量的 provider，尝试找到对应的索引
+    default_index = 2  # 默认 qwen
+    if env_provider and env_provider in [p["key"] for p in providers]:
+        provider_keys = [p["key"] for p in providers]
+        default_index = provider_keys.index(env_provider)
+
     selected_provider_name = st.selectbox(
         "选择模型提供商",
         options=list(provider_options.keys()),
-        index=2,  # 默认选择 qwen
+        index=default_index,
         help="选择一个模型提供商"
     )
 
@@ -266,7 +344,7 @@ with st.sidebar:
     # 自定义模型名称
     custom_model_name = st.text_input(
         "自定义模型名称 (可选)",
-        value="",
+        value=env_model_name if env_model_name else "",
         placeholder=default_model,
         help="留空则使用默认模型"
     )
@@ -276,19 +354,36 @@ with st.sidebar:
     if model_provider == "custom":
         custom_base_url = st.text_input(
             "自定义 API 基础 URL",
-            value="",
+            value=env_base_url if env_base_url else "",
             placeholder="https://your-api.com/v1",
             help="输入自定义的 OpenAI 兼容 API 端点"
         )
 
-    # API Key 输入
+    # API Key 输入 - 优先使用环境变量
     api_key = None
     if model_provider != "ollama":
-        api_key = st.text_input(
-            "API Key",
-            type="password",
-            help="API Key 仅存储在本地会话中"
-        )
+        if env_api_key:
+            api_key = env_api_key
+            st.text_input(
+                "API Key",
+                type="password",
+                value=env_api_key,
+                help="API Key 来自环境变量，可在 GitHub Secrets 中配置"
+            )
+            st.caption("如需覆盖，请在下方输入新的 API Key")
+            override_key = st.text_input(
+                "覆盖 API Key (可选)",
+                type="password",
+                help="输入新的 API Key 将覆盖环境变量配置"
+            )
+            if override_key:
+                api_key = override_key
+        else:
+            api_key = st.text_input(
+                "API Key",
+                type="password",
+                help="API Key 仅存储在本地会话中"
+            )
 
         # 根据不同提供商显示不同的获取链接提示
         if model_provider == "qwen":
@@ -484,6 +579,41 @@ with col2:
         help="1=非常放松，10=极度紧张"
     )
 
+    st.markdown("---")
+    st.markdown("#### MBTI 性格分析（可选）")
+
+    # MBTI 提示折叠框
+    with st.expander("📘 MBTI 性格类型说明"):
+        st.markdown(MBTI_COMPATIBILITY_HINT)
+
+    # 用户自己的 MBTI
+    user_mbti = st.selectbox(
+        "你的 MBTI 类型",
+        options=["未填写"] + MBTI_TYPES,
+        index=0,
+        help="选择你的 MBTI 性格类型"
+    )
+
+    # 显示用户 MBTI 描述
+    if user_mbti != "未填写":
+        st.caption(f"📌 {MBTI_DESCRIPTIONS.get(user_mbti, '')}")
+
+    # 对方的 MBTI
+    other_mbti = st.selectbox(
+        "对方的 MBTI 类型",
+        options=["未填写"] + MBTI_TYPES,
+        index=0,
+        help="选择对方的 MBTI 性格类型"
+    )
+
+    # 显示对方 MBTI 描述
+    if other_mbti != "未填写":
+        st.caption(f"📌 {MBTI_DESCRIPTIONS.get(other_mbti, '')}")
+
+    # 如果两者都填写，显示兼容性提示
+    if user_mbti != "未填写" and other_mbti != "未填写":
+        st.info(f"💞 分析将考虑 **{user_mbti}** 与 **{other_mbti}** 的性格差异")
+
     # 添加对话历史
     st.markdown("#### 添加历史对话")
     if st.button("➕ 添加一轮对话"):
@@ -531,7 +661,9 @@ if analyze_btn and user_input and st.session_state.engine:
 
                 result = st.session_state.engine.analyze(
                     user_input=user_input,
-                    conversation_history=st.session_state.conversation_history
+                    conversation_history=st.session_state.conversation_history,
+                    user_mbti=user_mbti if 'user_mbti' in locals() else None,
+                    other_mbti=other_mbti if 'other_mbti' in locals() else None
                 )
 
                 # 感知层完成

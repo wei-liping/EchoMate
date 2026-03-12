@@ -491,16 +491,65 @@ ai_date_with_ta/
 ├── prompts/
 │   ├── __init__.py
 │   └── system_prompts.py        # Prompt 模板
+├── .github/
+│   ├── workflows/
+│   │   └── deploy.yml           # GitHub Actions 部署配置
+│   └── SECRETS_GUIDE.md         # Secrets 配置详细指南
+├── .streamlit/
+│   └── secrets.toml.example     # 本地配置模板
 └── data/
     └── simulated_cases.py       # 模拟测试数据
 ```
 
 ---
 
+## 🚀 部署到 Streamlit Cloud
+
+### 方式一：通过 GitHub Secrets 配置（推荐）
+
+1. **在 GitHub 仓库设置 Secrets**：
+   - 进入 Settings → Secrets and variables → Actions
+   - 添加以下 Secrets：
+
+| Secret Name | Description | 示例值 |
+|-------------|-------------|--------|
+| `API_KEY` | API Key | `sk-xxxxxxxx` |
+| `DEFAULT_PROVIDER` | 默认提供商 | `qwen` |
+| `MODEL_NAME` | 模型名称（可选） | `qwen-plus` |
+| `BASE_URL` | API 端点（可选） | `https://...` |
+
+2. **连接 Streamlit Cloud**：
+   - 访问 https://share.streamlit.io
+   - 创建新应用，选择此 GitHub 仓库
+   - 在 Settings → Secrets 中添加相同的配置
+
+3. **自动部署**：
+   - 推送代码到 main 分支会自动触发 GitHub Actions
+   - Streamlit Cloud 会自动检测并部署
+
+### 方式二：本地配置
+
+```bash
+# 复制配置模板
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+
+# 编辑 secrets.toml，填入你的 API Key
+```
+
+详细部署指南请参考：`.github/SECRETS_GUIDE.md`
+
+---
+
 ## ❓ FAQ
 
 ### Q: API Key 安全吗？会被存储吗？
-**A:** API Key 仅保存在本地配置文件 (`~/.config/ai_date/config.json`)，不会上传到任何服务器。使用 Ollama 本地模型时完全不需要 API Key。
+**A:** API Key 仅保存在本地配置文件 (`~/.config/ai_date/config.json`) 或环境变量中，不会上传到任何服务器。使用 Ollama 本地模型时完全不需要 API Key。
+
+### Q: 如何部署到云端？
+**A:** 可以使用 GitHub Secrets 配置后推送到 Streamlit Cloud，详细步骤见 [部署到 Streamlit Cloud](#-部署到-streamlit-cloud) 章节。
+
+### Q: 新增的 MBTI 功能有什么用？
+**A:** MBTI 功能可以根据你和对方的性格类型，提供更有针对性的沟通建议。帮助理解双方性格差异，选择更适合的沟通方式。
 
 ### Q: 可以免费使用吗？
 **A:** 可以！使用 Ollama 本地部署开源模型（如 Qwen2.5）完全免费。部分云服务商也提供新用户免费额度。

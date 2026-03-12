@@ -8,7 +8,13 @@
       "Bash(python cli.py --help)",
       "Bash(/Users/lipingwei/Downloads/ai_date_with_ta/requirements.txt:*)",
       "Bash(python cli.py config --list-providers)",
-      "Bash(python3 -m py_compile main.py)"
+      "Bash(python3 -m py_compile main.py)",
+      "Bash(python -m py_compile main.py)",
+      "Bash(python -m py_compile engine.py)",
+      "Bash(python -m py_compile prompts/system_prompts.py)",
+      "Bash(pip install -q streamlit requests)",
+      "Bash(git add -A)",
+      "Bash(git commit -m \"backup: 改造前完整备份（含 MBTI 功能和 GitHub Secrets 支持）\")"
     ]
   }
 }
