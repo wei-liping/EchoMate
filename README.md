@@ -9,9 +9,7 @@
 
 **成就动机理论 × 归因训练 × 物理建模思维**
 
-🎉 **v2.0**: Fork 即部署！只需配置 GitHub Secrets，自动部署到 GitHub Pages
-
-[🌐 在线使用](#-在线使用无需-fork) • [🚀 5 分钟部署指南](#-5-分钟部署指南) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 心理学理论](#-核心理论)
+[🌐 在线使用](#-在线使用无需-fork) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 核心理论](#-核心理论) • [🚀 部署指南](#-5-分钟部署指南-fork-版本)
 
 </div>
 
@@ -21,6 +19,7 @@
 
 | ✨ | 亮点 | 说明 |
 |---|------|------|
+| 🌐 | **在线使用** | 无需 Fork，打开链接即可使用 |
 | 🚀 | **Fork 即部署** | 配置 GitHub Secrets 后自动部署到 GitHub Pages |
 | 🧠 | **三层分析架构** | 感知层 → 推理层 → 生成层，科学拆解对话 |
 | 📚 | **心理学理论** | 成就动机 × 归因训练 × 自我妨碍理论 |
@@ -28,50 +27,6 @@
 | 💡 | **MBTI 分析** | 根据双方性格类型提供针对性建议 |
 | 📤 | **导出对话** | 一键导出 Markdown 格式分析报告 |
 | ➕ | **新建对话** | 快速开启新一轮对话，配置不丢失 |
-
----
-
-## 🚀 5 分钟部署指南
-
-### 步骤 1: Fork 仓库
-
-点击 GitHub 右上角的 **Fork** 按钮，将此仓库复制到你自己的 GitHub 账号。
-
-### 步骤 2: 配置 API Key Secrets
-
-1. 进入你的 Fork 仓库页面
-2. 点击 **Settings** → **Secrets and variables** → **Actions**
-3. 点击 **New repository secret**
-4. 添加以下 Secrets：
-
-| Secret Name | Description | 示例值 |
-|-------------|-------------|--------|
-| `VITE_API_KEY` | 你的大模型 API Key | `sk-xxxxxxxx` |
-| `VITE_PROVIDER` | 默认模型提供商 | `qwen` |
-| `VITE_MODEL_NAME` | 默认模型名称（可选） | `qwen-plus` |
-
-> **提示**: 推荐使用通义千问 (Qwen)，新用户有免费额度。[获取 API Key →](https://dashscope.console.aliyun.com/apiKey)
-
-### 步骤 3: 启用 GitHub Pages
-
-1. 进入 **Settings** → **Pages**
-2. 在 **Build and deployment** 下：
-   - **Source**: 选择 `GitHub Actions`
-3. 页面会自动跳转到 Actions 页面
-
-### 步骤 4: 触发部署
-
-1. 进入 **Actions** 标签页
-2. 找到 **Build and Deploy to GitHub Pages** 工作流
-3. 点击 **Run workflow** → 选择 `main` 分支 → 点击 **Run workflow**
-
-### 步骤 5: 访问你的应用
-
-部署完成后（约 2-3 分钟），在 **Settings** → **Pages** 页面查看你的应用地址：
-
-```
-https://你的用户名.github.io/chat-lock-debugger/
-```
 
 ---
 
@@ -192,15 +147,59 @@ https://你的用户名.github.io/chat-lock-debugger/
 
 ---
 
-### 🚀 自行部署
+### 🚀 自行部署（Fork 版本）
 
-如果你想自己部署一个实例：
+如果你想自己部署一个专属实例，或者想要保存和导出对话报告，可以 Fork 此仓库并部署到 GitHub Pages：
 
-访问部署完成的 GitHub Pages 地址即可使用：
+**为什么需要 Fork 部署？**
+- 📤 支持导出对话报告（Markdown 格式）
+- 💾 保存配置到本地（API Key 存储在浏览器）
+- 🎨 自定义界面和提示词
+- 🔧 完全可控，可二次开发
+
+#### 5 分钟部署步骤
+
+**步骤 1: Fork 仓库**
+
+点击 GitHub 右上角的 **Fork** 按钮，将此仓库复制到你自己的 GitHub 账号。
+
+**步骤 2: 配置 API Key Secrets**
+
+1. 进入你的 Fork 仓库页面
+2. 点击 **Settings** → **Secrets and variables** → **Actions**
+3. 点击 **New repository secret**
+4. 添加以下 Secrets：
+
+| Secret Name | Description | 示例值 |
+|-------------|-------------|--------|
+| `VITE_API_KEY` | 你的大模型 API Key | `sk-xxxxxxxx` |
+| `VITE_PROVIDER` | 默认模型提供商 | `qwen` |
+| `VITE_MODEL_NAME` | 默认模型名称（可选） | `qwen-plus` |
+
+> **提示**: 推荐使用通义千问 (Qwen)，新用户有免费额度。[获取 API Key →](https://dashscope.console.aliyun.com/apiKey)
+
+**步骤 3: 启用 GitHub Pages**
+
+1. 进入 **Settings** → **Pages**
+2. 在 **Build and deployment** 下：
+   - **Source**: 选择 `GitHub Actions`
+3. 页面会自动跳转到 Actions 页面
+
+**步骤 4: 触发部署**
+
+1. 进入 **Actions** 标签页
+2. 找到 **Build and Deploy to GitHub Pages** 工作流
+3. 点击 **Run workflow** → 选择 `main` 分支 → 点击 **Run workflow**
+
+**步骤 5: 访问你的应用**
+
+部署完成后（约 2-3 分钟），在 **Settings** → **Pages** 页面查看你的应用地址：
 
 ```
 https://你的用户名.github.io/chat-lock-debugger/
 ```
+
+---
 
 ### 界面预览
 
@@ -409,7 +408,7 @@ ai_date_with_ta/
 **A:** API Key 存储在 GitHub Secrets 中，仅在你的浏览器本地使用，不会上传到任何第三方服务器。
 
 ### Q: 如何部署到云端？
-**A:** 配置 GitHub Secrets 后，GitHub Actions 会自动部署到 GitHub Pages，详细步骤见 [5 分钟部署指南](#-5-分钟部署指南)。
+**A:** 配置 GitHub Secrets 后，GitHub Actions 会自动部署到 GitHub Pages，详细步骤见 [自行部署指南](#-自行部署-fork-版本)。
 
 ### Q: MBTI 功能有什么用？
 **A:** MBTI 功能可以根据你和对方的性格类型，提供更有针对性的沟通建议。帮助理解双方性格差异，选择更适合的沟通方式。
