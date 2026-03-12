@@ -71,7 +71,12 @@
 
       <!-- 输入区域 -->
       <section class="input-section">
-        <h3>📝 输入对话内容</h3>
+        <div class="input-header">
+          <h3>📝 输入对话内容</h3>
+          <button @click="newConversation" :disabled="loading" class="btn btn-secondary btn-small">
+            ➕ 新建对话
+          </button>
+        </div>
         <textarea
           v-model="userInput"
           placeholder="例如：&#10;刚匹配到一个女生，她资料里说喜欢看电影，但我不知道该怎么开启话题...&#10;&#10;或者直接粘贴对话：&#10;你：你好，看到你也喜欢旅行，去过哪里印象最深呀？&#10;对方：嗯，去了挺多的，一时说不上来"
@@ -92,7 +97,12 @@
 
       <!-- 结果展示 -->
       <section v-if="result" class="result-section">
-        <h2>📊 分析结果</h2>
+        <div class="result-header">
+          <h2>📊 分析结果</h2>
+          <button @click="exportToMarkdown" class="btn btn-secondary btn-small">
+            📥 导出对话
+          </button>
+        </div>
 
         <!-- 顶层指标 -->
         <div class="metrics-grid">
@@ -591,6 +601,97 @@ ${mbtiInfo}
     copyText(text) {
       navigator.clipboard.writeText(text);
       alert('已复制到剪贴板！');
+    },
+    newConversation() {
+      this.userInput = ''
+      this.result = null
+      this.error = ''
+      this.progress = 0
+      this.loading = false
+    },
+    exportToMarkdown() {
+      if (!this.result) return
+
+      const now = new Date()
+      const timestamp = now.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }).replace(/[\/:]/g, '')
+
+      const filename = `chat-debug-report-${timestamp}.md`
+
+      let md = `# 聊天 Debug AI Agent - 对话分析报告\n\n`
+      md += `**生成时间**: ${new Date().toLocaleString('zh-CN')}\n\n`
+
+      // MBTI 信息
+      if (this.mbti.userMbti || this.mbti.otherMbti) {
+        md += `## MBTI 信息\n`
+        if (this.mbti.userMbti) {
+          md += `- **你的类型**: ${this.mbti.userMbti} - ${this.getMbtiDescription(this.mbti.userMbti)}\n`
+        }
+        if (this.mbti.otherMbti) {
+          md += `- **对方类型**: ${this.mbti.otherMbti} - ${this.getMbtiDescription(this.mbti.otherMbti)}\n`
+        }
+        md += `\n`
+      }
+
+      // 输入对话
+      md += `## 输入对话\n\n`
+      md += `> ${this.userInput.replace(/\n/g, '\n> ')}\n\n`
+
+      // 分析结果
+      md += `## 分析结果\n\n`
+
+      // 顶层指标
+      md += `### 核心指标\n\n`
+      md += `- **焦虑水平**: ${this.result.perception.anxiety_level}/10\n`
+      md += `- **对话阶段**: ${this.result.reasoning.dialogue_stage}\n`
+      md += `- **动量状态**: ${this.result.reasoning.dialogue_momentum}\n`
+      md += `- **建议数量**: ${this.result.generation.suggestions?.length || 0}\n\n`
+
+      // 感知层
+      md += `### 感知层分析\n\n`
+      md += `**心理标签**: ${this.result.perception.psychological_tags?.join(', ') || '无'}\n\n`
+      if (this.result.perception.self_handicapping_detected) {
+        md += `⚠️ **检测到自我妨碍倾向**\n\n`
+      }
+
+      // 推理层
+      md += `### 推理层分析\n\n`
+      md += `- **僵局成因**: ${this.result.reasoning.stagnation_cause}\n`
+      md += `- **推荐策略**: ${this.result.reasoning.recommended_strategy}\n`
+      md += `- **阻力因素**: ${this.result.reasoning.resistance_factors?.join(', ') || '无'}\n\n`
+
+      // 对话建议
+      md += `### 对话建议\n\n`
+      this.result.generation.suggestions?.forEach((s, index) => {
+        md += `#### 建议 ${index + 1}\n\n`
+        md += `**话术**:\n`
+        md += `> ${s.script}\n\n`
+        md += `- **策略说明**: ${s.rationale}\n`
+        md += `- **预期反应**: ${s.expected_response}\n`
+        md += `- **难度等级**: ${s.difficulty_level || '未指定'}\n\n`
+      })
+
+      // 心理引导
+      md += `### 心理引导\n\n`
+      md += `- **归因重构**: ${this.result.generation.meta_guidance?.attribution_reframe || '无'}\n`
+      md += `- **信心建立**: ${this.result.generation.meta_guidance?.confidence_builder || '无'}\n`
+
+      // 创建下载
+      const blob = new Blob([md], { type: 'text/markdown' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     }
   }
 }
@@ -725,8 +826,15 @@ body {
   margin-bottom: 25px;
 }
 
-.input-section h3 {
+.input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
+}
+
+.input-header h3 {
+  margin: 0;
   color: #333;
 }
 
@@ -771,6 +879,25 @@ body {
   transform: none;
 }
 
+.btn-secondary {
+  background: #f0f4ff;
+  color: #667eea;
+  border: 1px solid #667eea;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-large {
   width: 100%;
   margin-top: 15px;
@@ -809,8 +936,15 @@ body {
   margin-top: 30px;
 }
 
-.result-section h2 {
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+}
+
+.result-header h2 {
+  margin: 0;
   color: #333;
 }
 

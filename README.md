@@ -4,15 +4,14 @@
 
 ![Vue](https://img.shields.io/badge/Vue.js-3.4-green?logo=vue.js)
 ![Vite](https://img.shields.io/badge/Vite-5.0-purple?logo=vite)
-![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green?logo=mit)
 ![Models](https://img.shields.io/badge/Models-10+-orange?logo=artificial-intelligence)
 
 **成就动机理论 × 归因训练 × 物理建模思维**
 
-🎉 **v2.0 新增**: Fork 即部署！只需配置 GitHub Secrets，自动部署到 GitHub Pages
+🎉 **v2.0**: Fork 即部署！只需配置 GitHub Secrets，自动部署到 GitHub Pages
 
-[🚀 5 分钟部署指南](#-5-分钟部署指南) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 心理学理论](#-核心理论)
+[🌐 在线使用](#-在线使用无需-fork) • [🚀 5 分钟部署指南](#-5-分钟部署指南) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 心理学理论](#-核心理论)
 
 </div>
 
@@ -25,9 +24,10 @@
 | 🚀 | **Fork 即部署** | 配置 GitHub Secrets 后自动部署到 GitHub Pages |
 | 🧠 | **三层分析架构** | 感知层 → 推理层 → 生成层，科学拆解对话 |
 | 📚 | **心理学理论** | 成就动机 × 归因训练 × 自我妨碍理论 |
-| 🎨 | **双重版本** | 纯前端版 (GitHub Pages) + Python 版 (本地运行) |
+| 🎨 | **纯前端应用** | 无需后端，部署简单，开箱即用 |
 | 💡 | **MBTI 分析** | 根据双方性格类型提供针对性建议 |
-| 📤 | **一键复制** | 话术建议可直接复制发送 |
+| 📤 | **导出对话** | 一键导出 Markdown 格式分析报告 |
+| ➕ | **新建对话** | 快速开启新一轮对话，配置不丢失 |
 
 ---
 
@@ -175,175 +175,81 @@ https://你的用户名.github.io/chat-lock-debugger/
 | **对话冷场** | 识别冷场原因，提供救场话术 | 破冰话题 + 转换策略 |
 | **回复困惑** | 解读对方话语背后的情绪 | 情绪分析 + 回复建议 |
 | **关系推进** | 判断关系阶段，给出升级建议 | 进阶话术 + 时机建议 |
-| **复盘学习** | 导出完整对话分析报告 | MD/TXT 格式报告 |
-
----
-
-## 🚀 快速开始
-
-### 1. 克隆项目
-
-```bash
-git clone <your-repo-url>
-cd ai_date_with_ta
-```
-
-### 2. 安装依赖
-
-```bash
-# 创建虚拟环境
-python -m venv venv
-
-# 激活虚拟环境
-source venv/bin/activate  # macOS/Linux
-# 或
-venv\Scripts\activate     # Windows
-
-# 安装依赖
-pip install -r requirements.txt
-```
-
-### 3. 配置 API Key
-
-```bash
-# 方式 1: 使用 CLI 配置（推荐，会保存配置）
-python cli.py config --provider qwen --api-key YOUR_DASHSCOPE_KEY
-
-# 方式 2: 直接在命令中使用
-python cli.py analyze --text "不知道该怎么聊天..." --provider kimi --api-key YOUR_KIMI_KEY
-```
-
-### 4. 启动应用
-
-**Web 界面:**
-```bash
-streamlit run main.py
-```
-然后访问 `http://localhost:8501`
-
-**命令行:**
-```bash
-# 完整分析
-python cli.py analyze --text "刚匹配到一个女生，不知道该怎么开启话题..." --provider qwen
-
-# 快速分析
-python cli.py quick --text "TA 回复好冷淡，我该怎么办"
-
-# 从文件读取并输出 JSON
-python cli.py analyze -i conversation.txt --json
-```
+| **复盘学习** | 导出完整对话分析报告 | Markdown 格式报告 |
+| **多轮对话** | 新建对话开启新话题 | 清空输入，保留配置 |
 
 ---
 
 ## 💻 使用方式
 
-### Web 界面
+### 🌐 在线使用（无需 Fork）
+
+点击以下链接直接使用，无需部署：
+
+👉 **[https://wei-liping.github.io/chat-lock-debugger/](https://wei-liping.github.io/chat-lock-debugger/)**
+
+只需在页面中填写你的 API Key 即可开始使用。
+
+---
+
+### 🚀 自行部署
+
+如果你想自己部署一个实例：
+
+访问部署完成的 GitHub Pages 地址即可使用：
+
+```
+https://你的用户名.github.io/chat-lock-debugger/
+```
+
+### 界面预览
 
 <div align="center">
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    聊天 Debug AI Agent v1.1                      │
+│                    聊天 Debug AI Agent v2.0                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  侧边栏                      │  主界面                          │
-│  ┌─────────────────────┐    │  ┌───────────────────────────┐   │
-│  │ 🤖 模型选择          │    │  │ 💬 输入对话内容            │   │
-│  │ ○ Qwen (通义千问)    │    │  │                           │   │
-│  │ ○ Kimi (月之暗面)    │    │  │ TA 说"在忙"，然后就没...   │   │
-│  │ ○ DeepSeek           │    │  │                           │   │
-│  │ ○ Claude             │    │  └───────────────────────────┘   │
-│  │ ○ GPT-4              │    │                                  │
-│  │ ○ Ollama (本地)      │    │  [🚀 开始分析]                   │
-│  │                     │    │                                  │
-│  │ 🔑 API Key          │    │  ─────────────────────────────   │
-│  │ [●●●●●●●●]         │    │                                  │
-│  │                     │    │  📊 分析结果                      │
-│  │ ⚙️ 高级设置         │    │  ┌───────────────────────────┐   │
-│  │ - 导出格式          │    │  │ 焦虑水平：6/10            │   │
-│  │ - 温度参数          │    │  │ 对话阶段：初期接触        │   │
-│  └─────────────────────┘    │  │ 动量状态：负向 ↓          │   │
-│                             │  │                           │   │
-│                             │  │ 💡 建议 1: ...            │   │
-│                             │  │ 💡 建议 2: ...            │   │
-│                             │  └───────────────────────────┘   │
+│  💬 输入对话内容                                                │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ TA 说"在忙"，然后就没下文了...                             │ │
+│  │                                                           │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  🤖 模型选择：[Qwen ▼]     🔑 API Key: [●●●●●●●●]              │
+│                                                                 │
+│  [🚀 开始分析]                                                  │
+│                                                                 │
+│  ────────────────────────────────────────────────────────────  │
+│                                                                 │
+│  📊 分析结果                                                    │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ 焦虑水平：6/10     对话阶段：初期接触    动量状态：负向 ↓  │ │
+│  │                                                           │ │
+│  │ 💡 建议 1: ...                                            │ │
+│  │ 💡 建议 2: ...                                            │ │
+│  └───────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 </div>
 
-### CLI 命令速查
+### 本地开发（可选）
+
+如果你想本地调试前端代码：
 
 ```bash
-# 查看所有帮助
-python cli.py --help
+cd frontend
 
-# 配置默认提供商
-python cli.py config --provider anthropic
+# 安装依赖
+npm install
 
-# 分析单条对话
-python cli.py analyze -t "TA 说'在忙'，然后就没下文了..."
+# 启动开发服务器
+npm run dev
 
-# 快速模式（跳过详细分析）
-python cli.py quick -t "不知道该怎么回复..."
-
-# 输出 JSON（便于集成到其他系统）
-python cli.py analyze -t "help..." --json
-
-# 从文件读取
-python cli.py analyze -i conversation.txt
-
-# 导出分析报告
-python cli.py analyze -t "..." --export report.md
-```
-
-### 代码集成示例
-
-```python
-from engine import DatingAgentEngine
-
-# ========== 初始化引擎 ==========
-
-# 使用通义千问
-engine = DatingAgentEngine(
-    model_provider="qwen",
-    api_key="YOUR_DASHSCOPE_KEY"
-)
-
-# 使用 Kimi
-engine = DatingAgentEngine(
-    model_provider="kimi",
-    api_key="YOUR_KIMI_KEY"
-)
-
-# 使用本地 Ollama（无需 API Key）
-engine = DatingAgentEngine(
-    model_provider="ollama",
-    model_name="qwen2.5:7b"
-)
-
-# ========== 执行分析 ==========
-
-result = engine.analyze(
-    user_input="TA 说'在忙'，然后就没下文了...",
-    conversation_history=[
-        {"role": "user", "content": "在干嘛呢？"},
-        {"role": "other", "content": "在忙"},
-        {"role": "user", "content": "忙什么呢？"},
-        {"role": "other", "content": "有事，晚点说"}
-    ]
-)
-
-# ========== 获取结果 ==========
-
-print(f"焦虑水平：{result.perception.anxiety_level}/10")
-print(f"对话阶段：{result.reasoning.dialogue_stage}")
-print(f"动量状态：{result.reasoning.momentum}")
-
-print("\n💡 建议:")
-for i, suggestion in enumerate(result.generation.suggestions, 1):
-    print(f"{i}. {suggestion.script}")
-    print(f"   理由：{suggestion.rationale}")
+# 构建生产版本
+npm run build
 ```
 
 ---
@@ -413,26 +319,6 @@ for i, suggestion in enumerate(result.generation.suggestions, 1):
 | `"聊着聊着就没下文了"` | 冷场原因分析 + 救场话术 + 预防措施 |
 | `"要不要主动约 TA 出来？"` | 关系阶段判断 + 邀约时机建议 + 话术模板 |
 
-### 模拟数据测试
-
-运行模拟数据查看效果对比：
-
-```bash
-python data/simulated_cases.py
-```
-
-**汇总结果:**
-```
-┌────────────────────────────────────────┐
-│         模拟测试结果 (N=100)            │
-├────────────────────────────────────────┤
-│  平均对话轮次增加：+4.4 轮              │
-│  平均焦虑值降低：  -3.2 分              │
-│  回复延迟降低率：  76%                  │
-│  用户满意度：      89%                  │
-└────────────────────────────────────────┘
-```
-
 ---
 
 ## 🤖 支持的模型
@@ -456,26 +342,12 @@ python data/simulated_cases.py
 | **Anthropic** | `claude-sonnet-4-20250514` | 心理学理解最深，安全对齐好 |
 | **OpenAI** | `gpt-4o` | 综合能力最强，需要国际网络 |
 
-### 本地部署
-
-| 提供商 | 默认模型 | 说明 |
-|--------|---------|------|
-| **Ollama** | `qwen2.5:7b` | 本地运行，无需 API Key，数据隐私好 |
-| **自定义** | `custom-model` | 任意 OpenAI 兼容 API 端点 |
-
-### 查看所有支持的提供商
-
-```bash
-python cli.py config --list-providers
-```
-
 ### 模型选择建议
 
 | 场景 | 推荐模型 | 理由 |
 |------|---------|------|
 | **最佳效果** | Kimi / Qwen | 中文理解能力强，心理学概念准确 |
 | **性价比** | DeepSeek / Doubao | 价格低廉，效果良好 |
-| **本地部署** | Ollama + Qwen2.5 | 免费，数据隐私好 |
 | **国际模型** | Claude Sonnet 4 | 心理学理解最深，支持中文 |
 
 ---
@@ -500,19 +372,6 @@ python cli.py config --list-providers
 2. 登录/注册火山引擎账号
 3. 创建应用并获取 API Key
 
-### 配置方式
-
-```bash
-# 配置默认提供商（只需配置一次）
-python cli.py config --provider qwen --api-key sk-xxxxxxxxxxxxx
-
-# 验证配置
-python cli.py config --show
-
-# 临时使用其他提供商（不保存）
-python cli.py analyze --text "..." --provider kimi --api-key sk-xxxxxxxxxxxxx
-```
-
 ### 免费额度参考
 
 | 提供商 | 新用户免费额度 | 免费模型 |
@@ -520,7 +379,6 @@ python cli.py analyze --text "..." --provider kimi --api-key sk-xxxxxxxxxxxxx
 | Qwen | 新人礼包 | Qwen-Turbo |
 | Kimi | 新人礼包 | - |
 | DeepSeek | 充值赠送 | - |
-| Ollama | 完全免费 | 本地运行 |
 
 ---
 
@@ -528,76 +386,36 @@ python cli.py analyze --text "..." --provider kimi --api-key sk-xxxxxxxxxxxxx
 
 ```
 ai_date_with_ta/
-├── engine.py                    # 核心分析引擎（三层 Prompt 链）
-├── main.py                      # Streamlit Web 应用
-├── cli.py                       # 命令行工具
-├── requirements.txt             # 依赖清单
-├── README.md                    # 项目文档
-├── prompts/
-│   ├── __init__.py
-│   └── system_prompts.py        # Prompt 模板
+├── frontend/                    # 前端应用（Vue 3 + Vite）
+│   ├── src/
+│   │   ├── main.js              # 入口文件
+│   │   ├── App.vue              # 主组件
+│   │   ├── components/          # Vue 组件
+│   │   └── utils/               # 工具函数（API 调用等）
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
 ├── .github/
-│   ├── workflows/
-│   │   └── deploy.yml           # GitHub Actions 部署配置
-│   └── SECRETS_GUIDE.md         # Secrets 配置详细指南
-├── .streamlit/
-│   └── secrets.toml.example     # 本地配置模板
-└── data/
-    └── simulated_cases.py       # 模拟测试数据
+│   └── workflows/
+│       └── deploy.yml           # GitHub Actions 部署配置
+└── README.md                    # 项目文档
 ```
-
----
-
-## 🚀 部署到 Streamlit Cloud
-
-### 方式一：通过 GitHub Secrets 配置（推荐）
-
-1. **在 GitHub 仓库设置 Secrets**：
-   - 进入 Settings → Secrets and variables → Actions
-   - 添加以下 Secrets：
-
-| Secret Name | Description | 示例值 |
-|-------------|-------------|--------|
-| `API_KEY` | API Key | `sk-xxxxxxxx` |
-| `DEFAULT_PROVIDER` | 默认提供商 | `qwen` |
-| `MODEL_NAME` | 模型名称（可选） | `qwen-plus` |
-| `BASE_URL` | API 端点（可选） | `https://...` |
-
-2. **连接 Streamlit Cloud**：
-   - 访问 https://share.streamlit.io
-   - 创建新应用，选择此 GitHub 仓库
-   - 在 Settings → Secrets 中添加相同的配置
-
-3. **自动部署**：
-   - 推送代码到 main 分支会自动触发 GitHub Actions
-   - Streamlit Cloud 会自动检测并部署
-
-### 方式二：本地配置
-
-```bash
-# 复制配置模板
-cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-
-# 编辑 secrets.toml，填入你的 API Key
-```
-
-详细部署指南请参考：`.github/SECRETS_GUIDE.md`
 
 ---
 
 ## ❓ FAQ
 
 ### Q: API Key 安全吗？会被存储吗？
-**A:** API Key 仅保存在本地配置文件 (`~/.config/ai_date/config.json`) 或环境变量中，不会上传到任何服务器。使用 Ollama 本地模型时完全不需要 API Key。
+**A:** API Key 存储在 GitHub Secrets 中，仅在你的浏览器本地使用，不会上传到任何第三方服务器。
 
 ### Q: 如何部署到云端？
-**A:** 可以使用 GitHub Secrets 配置后推送到 Streamlit Cloud，详细步骤见 [部署到 Streamlit Cloud](#-部署到-streamlit-cloud) 章节。
+**A:** 配置 GitHub Secrets 后，GitHub Actions 会自动部署到 GitHub Pages，详细步骤见 [5 分钟部署指南](#-5-分钟部署指南)。
 
-### Q: 新增的 MBTI 功能有什么用？
+### Q: MBTI 功能有什么用？
 **A:** MBTI 功能可以根据你和对方的性格类型，提供更有针对性的沟通建议。帮助理解双方性格差异，选择更适合的沟通方式。
 
 ### Q: 可以免费使用吗？
-**A:** 可以！使用 Ollama 本地部署开源模型（如 Qwen2.5）完全免费。部分云服务商也提供新用户免费额度。
+**A:** 可以！部分云服务商提供新用户免费额度。
 
 ### Q: 支持哪些对话场景？
 **A:** 目前支持：开场破冰、冷场救场、回复分析、关系推进、约会邀约等常见社交场景。
@@ -606,7 +424,7 @@ cp .streamlit/secrets.toml.example .streamlit/secrets.toml
 **A:** 当前版本仅支持文本分析。如需分析语音，请先使用语音转文字工具转换为文本。
 
 ### Q: 导出的报告格式是什么？
-**A:** 支持 Markdown (.md) 和纯文本 (.txt) 两种格式，方便复盘和分享。
+**A:** 支持 Markdown (.md) 格式，包含完整的分析结果、MBTI 信息（如有）、对话内容和建议，方便复盘和保存。
 
 ### Q: 如何反馈问题或建议？
 **A:** 欢迎在 GitHub Issues 中提交问题，或联系开发者邮箱。
@@ -621,10 +439,10 @@ MIT License
 
 <div align="center">
 
-**聊天 Debug (Chat-lock Debugger) AI Agent v1.1**
+**聊天 Debug (Chat-lock Debugger) AI Agent v2.0**
 
 基于成就动机理论 × 归因训练 × 物理建模思维
 
-[⬆️ 返回顶部](#聊天-debug-chat-lock-debugger-ai-agent-v11)
+[⬆️ 返回顶部](#聊天-debug-chat-lock-debugger-ai-agent-v20)
 
 </div>
