@@ -1,0 +1,83 @@
+# GitHub Actions - 构建并部署到 GitHub Pages
+# 用于聊天 Debug 纯前端版本
+#
+# 使用说明：
+# 1. Fork 此仓库
+# 2. 在 Settings → Pages 中启用 GitHub Pages，选择 GitHub Actions 作为源
+# 3. 推送代码或手动触发 workflow 会自动构建并部署
+#
+# API Key 配置：
+# - 部署后用户可以在界面上输入自己的 API Key
+# - API Key 仅保存在用户浏览器本地，不会上传到任何服务器
+
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '手动部署原因'
+        required: false
+        default: '手动触发部署'
+
+# 设置 GITHUB_TOKEN 的权限，允许部署到 GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允许一个并发部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # 构建任务
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # 部署任务
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

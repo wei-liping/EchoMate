@@ -61,3 +61,7 @@ coverage.xml
 # Temporary files
 *.tmp
 *.bak
+
+# Frontend
+frontend/node_modules/
+frontend/dist/

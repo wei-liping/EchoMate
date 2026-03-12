@@ -1,17 +1,18 @@
-# 聊天 Debug (Chat-lock Debugger) AI Agent v1.1
+# 聊天 Debug (Chat-lock Debugger) AI Agent v2.0
 
 <div align="center">
 
+![Vue](https://img.shields.io/badge/Vue.js-3.4-green?logo=vue.js)
+![Vite](https://img.shields.io/badge/Vite-5.0-purple?logo=vite)
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green?logo=mit)
 ![Models](https://img.shields.io/badge/Models-10+-orange?logo=artificial-intelligence)
-![Streamlit](https://img.shields.io/badge/UI-Streamlit-red?logo=streamlit)
 
 **成就动机理论 × 归因训练 × 物理建模思维**
 
-一个生产级的 AI Agent 工具，帮助突破聊天冷场困境
+🎉 **v2.0 新增**: Fork 即部署！只需配置 GitHub Secrets，自动部署到 GitHub Pages
 
-[快速开始](#-快速开始) • [功能演示](#-功能演示) • [支持模型](#-支持的模型) • [API 配置](#-api-配置指南)
+[🚀 5 分钟部署指南](#-5-分钟部署指南) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 心理学理论](#-核心理论)
 
 </div>
 
@@ -21,12 +22,55 @@
 
 | ✨ | 亮点 | 说明 |
 |---|------|------|
+| 🚀 | **Fork 即部署** | 配置 GitHub Secrets 后自动部署到 GitHub Pages |
 | 🧠 | **三层分析架构** | 感知层 → 推理层 → 生成层，科学拆解对话 |
 | 📚 | **心理学理论** | 成就动机 × 归因训练 × 自我妨碍理论 |
-| 🤖 | **10+ 模型支持** | Qwen/Kimi/DeepSeek/Claude/GPT，自由选择 |
-| 🎨 | **双重界面** | Web 界面 + CLI 命令行，满足不同习惯 |
-| 📤 | **报告导出** | MD/TXT 格式导出，方便复盘和分享 |
-| ⏱️ | **动态进度** | 实时进度条显示，分析过程透明可见 |
+| 🎨 | **双重版本** | 纯前端版 (GitHub Pages) + Python 版 (本地运行) |
+| 💡 | **MBTI 分析** | 根据双方性格类型提供针对性建议 |
+| 📤 | **一键复制** | 话术建议可直接复制发送 |
+
+---
+
+## 🚀 5 分钟部署指南
+
+### 步骤 1: Fork 仓库
+
+点击 GitHub 右上角的 **Fork** 按钮，将此仓库复制到你自己的 GitHub 账号。
+
+### 步骤 2: 配置 API Key Secrets
+
+1. 进入你的 Fork 仓库页面
+2. 点击 **Settings** → **Secrets and variables** → **Actions**
+3. 点击 **New repository secret**
+4. 添加以下 Secrets：
+
+| Secret Name | Description | 示例值 |
+|-------------|-------------|--------|
+| `VITE_API_KEY` | 你的大模型 API Key | `sk-xxxxxxxx` |
+| `VITE_PROVIDER` | 默认模型提供商 | `qwen` |
+
+> **提示**: 推荐使用通义千问 (Qwen)，新用户有免费额度。[获取 API Key →](https://dashscope.console.aliyun.com/apiKey)
+
+### 步骤 3: 启用 GitHub Pages
+
+1. 进入 **Settings** → **Pages**
+2. 在 **Build and deployment** 下：
+   - **Source**: 选择 `GitHub Actions`
+3. 页面会自动跳转到 Actions 页面
+
+### 步骤 4: 触发部署
+
+1. 进入 **Actions** 标签页
+2. 找到 **Build and Deploy to GitHub Pages** 工作流
+3. 点击 **Run workflow** → 选择 `main` 分支 → 点击 **Run workflow**
+
+### 步骤 5: 访问你的应用
+
+部署完成后（约 2-3 分钟），在 **Settings** → **Pages** 页面查看你的应用地址：
+
+```
+https://你的用户名.github.io/chat-lock-debugger/
+```
 
 ---
 

@@ -14,7 +14,9 @@
       "Bash(python -m py_compile prompts/system_prompts.py)",
       "Bash(pip install -q streamlit requests)",
       "Bash(git add -A)",
-      "Bash(git commit -m \"backup: 改造前完整备份（含 MBTI 功能和 GitHub Secrets 支持）\")"
+      "Bash(git commit -m \"backup: 改造前完整备份（含 MBTI 功能和 GitHub Secrets 支持）\")",
+      "Bash(npm install)",
+      "Bash(npm run build)"
     ]
   }
 }
