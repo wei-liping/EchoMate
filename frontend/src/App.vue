@@ -234,8 +234,21 @@ export default {
   },
   mounted() {
     this.loadConfig();
+    this.loadEnvDefaults();
   },
   methods: {
+    loadEnvDefaults() {
+      // 从环境变量加载默认值（GitHub Actions 构建时注入）
+      if (import.meta.env.VITE_PROVIDER && !this.config.provider) {
+        this.config.provider = import.meta.env.VITE_PROVIDER;
+      }
+      if (import.meta.env.VITE_API_KEY && !this.config.apiKey) {
+        this.config.apiKey = import.meta.env.VITE_API_KEY;
+      }
+      if (import.meta.env.VITE_MODEL_NAME && !this.config.modelName) {
+        this.config.modelName = import.meta.env.VITE_MODEL_NAME;
+      }
+    },
     getDefaultModel(provider) {
       return MODEL_CONFIGS[provider]?.defaultModel || 'default-model';
     },
