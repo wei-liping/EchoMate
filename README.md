@@ -48,6 +48,7 @@
 |-------------|-------------|--------|
 | `VITE_API_KEY` | 你的大模型 API Key | `sk-xxxxxxxx` |
 | `VITE_PROVIDER` | 默认模型提供商 | `qwen` |
+| `VITE_MODEL_NAME` | 默认模型名称（可选） | `qwen-plus` |
 
 > **提示**: 推荐使用通义千问 (Qwen)，新用户有免费额度。[获取 API Key →](https://dashscope.console.aliyun.com/apiKey)
 
