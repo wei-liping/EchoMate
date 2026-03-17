@@ -426,7 +426,7 @@ ai_date_with_ta/
 **A:** 支持 Markdown (.md) 格式，包含完整的分析结果、MBTI 信息（如有）、对话内容和建议，方便复盘和保存。
 
 ### Q: 如何反馈问题或建议？
-**A:** 欢迎在 GitHub Issues 中提交问题，或联系开发者邮箱。
+**A:** 欢迎在 GitHub Issues 中提交问题。
 
 ---
 
@@ -445,3 +445,5 @@ MIT License
 [⬆️ 返回顶部](#聊天-debug-chat-lock-debugger-ai-agent-v20)
 
 </div>
+
+
