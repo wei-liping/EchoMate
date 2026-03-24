@@ -1,4 +1,10 @@
-# 聊天 Debug (Chat-lock Debugger) AI Agent v2.0
+# 🧠 EchoMate
+
+> 更聪明的对话助手，帮你把回复说得更好听、更得体。
+
+EchoMate（原「聊天 Debug」）是一款面向中文社交场景的 **AI 对话分析与回复助手**：根据你输入的对话内容，结合心理学视角给出分析与多条话术建议，兼顾语气与场合。
+
+无论是和朋友闲聊、在交友/约会类 App 里破冰，还是处理需要分寸的职场消息，EchoMate 都希望帮你 **回得更有底气、更清晰、也更懂分寸**。
 
 <div align="center">
 
@@ -7,30 +13,215 @@
 ![License](https://img.shields.io/badge/License-MIT-green?logo=mit)
 ![Models](https://img.shields.io/badge/Models-10+-orange?logo=artificial-intelligence)
 
-**成就动机理论 × 归因训练 × 物理建模思维**
-
-[🌐 在线使用](#-在线使用无需-fork) • [📖 功能说明](#-功能说明) • [🤖 支持模型](#-支持的模型) • [🧠 核心理论](#-核心理论) • [🚀 部署指南](#-5-分钟部署指南-fork-版本)
+[快速上手](#quickstart) • [界面预览](#preview) • [技术栈](#tech-stack) • [深入了解](#deep-dive) • [FAQ](#faq)
 
 </div>
 
 ---
 
-## 🎯 项目亮点
+## ✨ 功能亮点
 
-| ✨ | 亮点 | 说明 |
-|---|------|------|
-| 🌐 | **在线使用** | 无需 Fork，打开链接即可使用 |
-| 🚀 | **Fork 即部署** | 配置 GitHub Secrets 后自动部署到 GitHub Pages |
-| 🧠 | **三层分析架构** | 感知层 → 推理层 → 生成层，科学拆解对话 |
-| 📚 | **心理学理论** | 成就动机 × 归因训练 × 自我妨碍理论 |
-| 🎨 | **纯前端应用** | 无需后端，部署简单，开箱即用 |
-| 💡 | **MBTI 分析** | 根据双方性格类型提供针对性建议 |
-| 📤 | **导出对话** | 一键导出 Markdown 格式分析报告 |
-| ➕ | **新建对话** | 快速开启新一轮对话，配置不丢失 |
+### 💬 智能回复建议  
+结合你输入的上下文，生成多条不同风格的话术方向，并附简要理由，便于你挑选或改写。
+
+### 🎯 语气与风格  
+可按场景需要偏向不同沟通风格（轻松、友善、专业、略带暧昧或幽默等，具体以页面内能力为准）。
+
+### 🧠 上下文与心理视角  
+围绕当前对话脉络给出建议；内置 **感知层 → 推理层 → 生成层** 的分析框架（详见 [深入了解](#deep-dive)）。
+
+### ⚡ 即时辅助  
+纯前端在浏览器中运行，配置 API Key 后即可使用；支持导出 Markdown 分析报告。
+
+### 📊 MBTI（可选）  
+填写双方 MBTI 时，分析会参考性格差异，给出更有针对性的沟通提示。
 
 ---
 
-## 📖 简介
+## 🎯 适用场景
+
+- 看到消息不知道该怎么回  
+- 想让回复更好接话、更有趣  
+- 在约会/交友场景里需要开场、破冰或救场  
+- 需要更稳妥地处理敏感话题或偏正式的沟通  
+
+---
+
+<a id="quickstart"></a>
+
+## 🚀 快速上手
+
+### 🌐 在线使用（无需 Fork）
+
+直接打开即可使用（无需克隆仓库）：
+
+👉 **[https://wei-liping.github.io/chat-lock-debugger/](https://wei-liping.github.io/chat-lock-debugger/)**
+
+> **说明**：若你已将 GitHub 仓库重命名为 `EchoMate` 等名称，请把上述链接中的路径换成你实际的 GitHub Pages 地址（形如 `https://你的用户名.github.io/仓库名/`）。
+
+#### 如何添加 API Key（在线版）
+
+1. 打开在线页面后，展开 **「⚙️ API 配置（首次使用需要设置）」**。  
+2. 选择 **模型提供商**（如通义千问、Kimi、DeepSeek 等）。  
+3. 在 **API Key** 输入框中粘贴你从对应平台申请的 Key。  
+4. 可选：填写 **模型名称**（留空则使用各提供商默认模型）。  
+5. 点击 **保存配置**。  
+
+**安全说明**：API Key 仅保存在你的 **浏览器本地**（`localStorage`），不会上传到 EchoMate 或任何第三方服务器；请求由你的浏览器直接向大模型服务商发起。
+
+<a id="online-models"></a>
+
+#### 支持的模型
+
+**国产大模型（推荐，中文理解能力强）**
+
+| 提供商 | 默认模型 | API Key 获取 | 特点 |
+|--------|---------|-------------|------|
+| **通义千问 (Qwen)** | `qwen-plus` | [阿里云 DashScope](https://dashscope.console.aliyun.com/apiKey) | 中文能力强 |
+| **Kimi (月之暗面)** | `moonshot-v1-8k` | [Moonshot Platform](https://platform.moonshot.cn/console/api-keys) | 长文本理解优秀 |
+| **豆包 (Doubao)** | `doubao-pro-4k` | [VolcEngine Ark](https://console.volcengine.com/ark) | 性价比高 |
+| **智谱 AI (GLM)** | `glm-4` | [BigModel Open Platform](https://open.bigmodel.cn/usercenter/apikeys) | 学术背景 |
+| **百川智能** | `Baichuan4` | [Baichuan Platform](https://platform.baichuan-ai.com/console/apiKey) | 中文场景 |
+| **深度求索** | `deepseek-chat` | [DeepSeek Platform](https://platform.deepseek.com/api_keys) | 价格低廉 |
+| **MiniMax** | `abab6.5-chat` | [MiniMax Platform](https://platform.minimaxi.com/user-center/api-key) | ToC 应用 |
+
+**国际模型**
+
+| 提供商 | 默认模型 | 特点 |
+|--------|---------|------|
+| **Anthropic** | `claude-sonnet-4-20250514` | 心理学理解深，安全对齐好 |
+| **OpenAI** | `gpt-4o` | 综合能力强（视网络与账号而定） |
+
+**模型选择建议**
+
+| 场景 | 推荐模型 | 理由 |
+|------|---------|------|
+| **中文场景** | Kimi / Qwen | 中文理解与表达更稳 |
+| **性价比** | DeepSeek / Doubao | 价格低，效果可用 |
+| **国际模型** | Claude Sonnet 系列 | 心理与对话理解深 |
+
+<a id="online-api"></a>
+
+#### API 配置指南（摘要）
+
+**通义千问 (Qwen)**
+
+1. 访问 [阿里云 DashScope](https://dashscope.console.aliyun.com/apiKey)  
+2. 登录/注册并开通 DashScope  
+3. 创建 API Key 并复制到 EchoMate 配置中  
+
+**Kimi (月之暗面)**
+
+1. 访问 [Moonshot Platform](https://platform.moonshot.cn/console/api-keys)  
+2. 创建 API Key 并复制  
+
+**豆包 (Doubao)**
+
+1. 访问 [VolcEngine Ark](https://console.volcengine.com/ark)  
+2. 创建应用并获取 API Key  
+
+**免费额度（仅供参考，以各平台为准）**
+
+| 提供商 | 说明 |
+|--------|------|
+| Qwen | 新用户常有试用额度 |
+| Kimi | 以平台活动为准 |
+| DeepSeek | 以平台规则为准 |
+
+---
+
+<a id="deploy"></a>
+
+### 🖥️ 自行部署（Fork + GitHub Pages）
+
+若希望使用自己的域名或 Fork 后二次开发，可参考以下流程（与原版一致）：
+
+**步骤 1：Fork 仓库**  
+将本仓库 Fork 到你的 GitHub 账号。
+
+**步骤 2：配置 Secrets（可选，用于构建时注入默认环境变量）**  
+在 Fork 后的仓库：**Settings** → **Secrets and variables** → **Actions** → **New repository secret**：
+
+| Secret Name | 说明 | 示例值 |
+|-------------|------|--------|
+| `VITE_API_KEY` | 大模型 API Key | `sk-xxxxxxxx` |
+| `VITE_PROVIDER` | 默认提供商 | `qwen` |
+| `VITE_MODEL_NAME` | 默认模型名（可选） | `qwen-plus` |
+
+> 推荐通义千问（Qwen）等国产模型，中文理解好。[获取 Qwen API Key →](https://dashscope.console.aliyun.com/apiKey)
+
+**步骤 3：启用 GitHub Pages**  
+**Settings** → **Pages** → **Source** 选择 **GitHub Actions**。
+
+**步骤 4：触发部署**  
+在 **Actions** 中找到 **Build and Deploy to GitHub Pages**，运行 workflow（或推送 `frontend/` 变更触发）。
+
+**步骤 5：访问**  
+部署完成后，地址一般为：
+
+`https://你的用户名.github.io/仓库名/`
+
+---
+
+### 💻 本地开发
+
+```bash
+git clone https://github.com/wei-liping/chat-lock-debugger.git
+cd chat-lock-debugger
+cd frontend
+npm install
+npm run dev
+```
+
+构建生产包：
+
+```bash
+npm run build
+```
+
+构建产物输出目录见 `frontend/vite.config.js` 中的 `build.outDir` 配置。
+
+---
+
+<a id="preview"></a>
+
+## 🖼️ 界面预览
+
+<!-- 首页主图：更新资源后将下方注释替换为实际路径 -->
+<!-- ![EchoMate 首页](image_example/your-hero.png) -->
+
+以下为 `image_example` 文件夹中的使用示例（文件名含空格，已做 URL 编码）：
+
+| 示例 | 预览 |
+|------|------|
+| 界面 1 | ![示例 1](image_example/Screenshot%202026-03-11%20at%2014.34.46.png) |
+| 界面 2 | ![示例 2](image_example/Screenshot%202026-03-11%20at%2014.35.10.png) |
+| 界面 3 | ![示例 3](image_example/Screenshot%202026-03-11%20at%2016.45.50.png) |
+| 界面 4 | ![示例 4](image_example/Screenshot%202026-03-11%20at%2016.46.17.png) |
+| 界面 5 | ![示例 5](image_example/Screenshot%202026-03-11%20at%2016.46.36.png) |
+| 界面 6 | ![示例 6](image_example/Screenshot%202026-03-11%20at%2016.46.50.png) |
+| 界面 7 | ![示例 7](image_example/Screenshot%202026-03-11%20at%2017.21.09.png) |
+
+---
+
+<a id="tech-stack"></a>
+
+## 🛠️ 技术栈
+
+| 层级 | 说明 |
+|------|------|
+| **前端** | Vue 3、Vite、Marked（Markdown 渲染） |
+| **架构** | 纯前端 SPA；通过用户配置的 API Key 在浏览器侧调用兼容 OpenAI 的多厂商 API，无自建业务后端 |
+| **AI** | 多提供商 LLM（通义千问、Kimi、DeepSeek、智谱、豆包等，详见 [在线使用](#quickstart) 中 [支持的模型](#online-models)） |
+| **可选** | 仓库内另含 Python / Streamlit 相关脚本（`main.py` 等），用于实验或本地 Streamlit 版本，与 GitHub Pages 前端相互独立 |
+
+---
+
+<a id="deep-dive"></a>
+
+## 📚 深入了解：心理学与三层架构
+
+本节从 **心理学视角** 说明 EchoMate 背后的理论三角与 **感知层 → 推理层 → 生成层** 的分析框架，便于理解模型如何拆解对话与给出建议。
 
 ### 痛点分析
 
@@ -45,19 +236,19 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-这些困境背后，往往隐藏着深层的心理因素：
+这些困境背后，往往存在常见心理因素：
 
 | 心理现象 | 表现形式 | 影响 |
 |---------|---------|------|
 | **社交焦虑** | 担心说错话、过度自我监控 | 回复延迟、对话中断 |
-| **自我妨碍 (Self-Handicapping)** | "我不太会聊天"等前置防御 | 降低投入、回避挑战 |
-| **归因偏差** | 将冷场归因为"能力不足" | 自我否定、退出互动 |
+| **自我妨碍 (Self-Handicapping)** | 「我不太会聊天」等前置防御 | 降低投入、回避挑战 |
+| **归因偏差** | 将冷场归因为「能力不足」 | 自我否定、退出互动 |
 
-### 核心理论
+### 核心理论：理论三角
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                      聊天 Debug 理论三角                          │
+│                      EchoMate / 聊天 Debug 理论三角               │
 │                                                                  │
 │           ┌─────────────────┐                                    │
 │           │  成就动机理论    │                                    │
@@ -75,10 +266,6 @@
 │  将社交视为可练习的技能，而非天赋                                 │
 └──────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## ✨ 功能特性
 
 ### 三层式分析架构
 
@@ -122,140 +309,7 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 使用场景
-
-| 场景 | 功能 | 输出 |
-|------|------|------|
-| **开场困难** | 分析对方资料/动态，生成个性化开场白 | 3 种风格开场建议 |
-| **对话冷场** | 识别冷场原因，提供救场话术 | 破冰话题 + 转换策略 |
-| **回复困惑** | 解读对方话语背后的情绪 | 情绪分析 + 回复建议 |
-| **关系推进** | 判断关系阶段，给出升级建议 | 进阶话术 + 时机建议 |
-| **复盘学习** | 导出完整对话分析报告 | Markdown 格式报告 |
-| **多轮对话** | 新建对话开启新话题 | 清空输入，保留配置 |
-
----
-
-## 💻 使用方式
-
-### 🌐 在线使用（无需 Fork）
-
-点击以下链接直接使用，无需部署：
-
-👉 **[https://wei-liping.github.io/chat-lock-debugger/](https://wei-liping.github.io/chat-lock-debugger/)**
-
-只需在页面中填写你的 API Key 即可开始使用。
-
----
-
-### 🚀 自行部署（Fork 版本）
-
-如果你想自己部署一个专属实例，或者想要保存和导出对话报告，可以 Fork 此仓库并部署到 GitHub Pages：
-
-**为什么需要 Fork 部署？**
-- 📤 支持导出对话报告（Markdown 格式）
-- 💾 保存配置到本地（API Key 存储在浏览器）
-- 🎨 自定义界面和提示词
-- 🔧 完全可控，可二次开发
-
-#### 5 分钟部署步骤
-
-**步骤 1: Fork 仓库**
-
-点击 GitHub 右上角的 **Fork** 按钮，将此仓库复制到你自己的 GitHub 账号。
-
-**步骤 2: 配置 API Key Secrets**
-
-1. 进入你的 Fork 仓库页面
-2. 点击 **Settings** → **Secrets and variables** → **Actions**
-3. 点击 **New repository secret**
-4. 添加以下 Secrets：
-
-| Secret Name | Description | 示例值 |
-|-------------|-------------|--------|
-| `VITE_API_KEY` | 你的大模型 API Key | `sk-xxxxxxxx` |
-| `VITE_PROVIDER` | 默认模型提供商 | `qwen` |
-| `VITE_MODEL_NAME` | 默认模型名称（可选） | `qwen-plus` |
-
-> **提示**: 推荐使用通义千问 (Qwen)，新用户有免费额度。[获取 API Key →](https://dashscope.console.aliyun.com/apiKey)
-
-**步骤 3: 启用 GitHub Pages**
-
-1. 进入 **Settings** → **Pages**
-2. 在 **Build and deployment** 下：
-   - **Source**: 选择 `GitHub Actions`
-3. 页面会自动跳转到 Actions 页面
-
-**步骤 4: 触发部署**
-
-1. 进入 **Actions** 标签页
-2. 找到 **Build and Deploy to GitHub Pages** 工作流
-3. 点击 **Run workflow** → 选择 `main` 分支 → 点击 **Run workflow**
-
-**步骤 5: 访问你的应用**
-
-部署完成后（约 2-3 分钟），在 **Settings** → **Pages** 页面查看你的应用地址：
-
-```
-https://你的用户名.github.io/chat-lock-debugger/
-```
-
----
-
-### 界面预览
-
-<div align="center">
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    聊天 Debug AI Agent v2.0                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  💬 输入对话内容                                                │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │ TA 说"在忙"，然后就没下文了...                             │ │
-│  │                                                           │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                 │
-│  🤖 模型选择：[Qwen ▼]     🔑 API Key: [●●●●●●●●]              │
-│                                                                 │
-│  [🚀 开始分析]                                                  │
-│                                                                 │
-│  ────────────────────────────────────────────────────────────  │
-│                                                                 │
-│  📊 分析结果                                                    │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │ 焦虑水平：6/10     对话阶段：初期接触    动量状态：负向 ↓  │ │
-│  │                                                           │ │
-│  │ 💡 建议 1: ...                                            │ │
-│  │ 💡 建议 2: ...                                            │ │
-│  └───────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-</div>
-
-### 本地开发（可选）
-
-如果你想本地调试前端代码：
-
-```bash
-cd frontend
-
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-
-# 构建生产版本
-npm run build
-```
-
----
-
-## 📊 功能演示
-
-### 完整分析流程图
+### 完整分析流程（示例）
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -305,128 +359,73 @@ npm run build
 │  ✅ 可复制话术                                                           │
 │  ✅ 心理学依据                                                           │
 │  ✅ 后续应对策略                                                         │
-│  ✅ 可导出为 MD/TXT 格式                                                  │
+│  ✅ 可导出为 MD 格式                                                     │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 输入输出对比
+### 输入输出对照
 
 | 输入 | 输出 |
 |------|------|
-| `"TA 回复好冷淡，我该怎么办"` | 焦虑分析 + 3 种回复策略 + 心态调整建议 |
-| `"刚匹配到人，不知道怎么开场"` | 个性化开场白 × 3 + 避雷指南 |
+| `"TA 回复好冷淡，我该怎么办"` | 焦虑分析 + 多种回复策略 + 心态调整建议 |
+| `"刚匹配到人，不知道怎么开场"` | 个性化开场白 + 避雷指南 |
 | `"聊着聊着就没下文了"` | 冷场原因分析 + 救场话术 + 预防措施 |
 | `"要不要主动约 TA 出来？"` | 关系阶段判断 + 邀约时机建议 + 话术模板 |
-
----
-
-## 🤖 支持的模型
-
-### 国产大模型 (推荐，中文理解能力强)
-
-| 提供商 | 默认模型 | API Key 获取 | 特点 |
-|--------|---------|-------------|------|
-| **通义千问 (Qwen)** | `qwen-plus` | [阿里云 DashScope](https://dashscope.console.aliyun.com/apiKey) | 阿里出品，中文能力强 |
-| **Kimi (月之暗面)** | `moonshot-v1-8k` | [Moonshot Platform](https://platform.moonshot.cn/console/api-keys) | 长文本理解优秀 |
-| **豆包 (Doubao)** | `doubao-pro-4k` | [VolcEngine Ark](https://console.volcengine.com/ark) | 字节出品，性价比高 |
-| **智谱 AI (GLM)** | `glm-4` | [BigModel Open Platform](https://open.bigmodel.cn/usercenter/apikeys) | 清华系，学术背景 |
-| **百川智能** | `Baichuan4` | [Baichuan Platform](https://platform.baichuan-ai.com/console/apiKey) | 搜狗原班人马 |
-| **深度求索** | `deepseek-chat` | [DeepSeek Platform](https://platform.deepseek.com/api_keys) | 价格低廉，效果不错 |
-| **MiniMax** | `abab6.5-chat` | [MiniMax Platform](https://platform.minimaxi.com/user-center/api-key) | 专注 ToC 应用 |
-
-### 国际模型
-
-| 提供商 | 默认模型 | 特点 |
-|--------|---------|------|
-| **Anthropic** | `claude-sonnet-4-20250514` | 心理学理解最深，安全对齐好 |
-| **OpenAI** | `gpt-4o` | 综合能力最强，需要国际网络 |
-
-### 模型选择建议
-
-| 场景 | 推荐模型 | 理由 |
-|------|---------|------|
-| **最佳效果** | Kimi / Qwen | 中文理解能力强，心理学概念准确 |
-| **性价比** | DeepSeek / Doubao | 价格低廉，效果良好 |
-| **国际模型** | Claude Sonnet 4 | 心理学理解最深，支持中文 |
-
----
-
-## 🔧 API 配置指南
-
-### 获取 API Key 步骤
-
-#### 通义千问 (Qwen)
-1. 访问 [阿里云 DashScope](https://dashscope.console.aliyun.com/apiKey)
-2. 登录/注册阿里云账号
-3. 开通 DashScope 服务（新用户有免费额度）
-4. 创建 API Key 并复制
-
-#### Kimi (月之暗面)
-1. 访问 [Moonshot Platform](https://platform.moonshot.cn/console/api-keys)
-2. 登录/注册账号
-3. 创建 API Key 并复制
-
-#### 豆包 (Doubao)
-1. 访问 [VolcEngine Ark](https://console.volcengine.com/ark)
-2. 登录/注册火山引擎账号
-3. 创建应用并获取 API Key
-
-### 免费额度参考
-
-| 提供商 | 新用户免费额度 | 免费模型 |
-|--------|--------------|---------|
-| Qwen | 新人礼包 | Qwen-Turbo |
-| Kimi | 新人礼包 | - |
-| DeepSeek | 充值赠送 | - |
 
 ---
 
 ## 📁 项目结构
 
 ```
-ai_date_with_ta/
-├── frontend/                    # 前端应用（Vue 3 + Vite）
+.
+├── frontend/                 # 前端（Vue 3 + Vite），GitHub Pages 主产物
 │   ├── src/
-│   │   ├── main.js              # 入口文件
-│   │   ├── App.vue              # 主组件
-│   │   ├── components/          # Vue 组件
-│   │   └── utils/               # 工具函数（API 调用等）
+│   │   ├── main.js
+│   │   ├── App.vue
+│   │   ├── components/
+│   │   └── utils/
 │   ├── index.html
 │   ├── package.json
 │   └── vite.config.js
-├── .github/
-│   └── workflows/
-│       └── deploy.yml           # GitHub Actions 部署配置
-└── README.md                    # 项目文档
+├── .github/workflows/
+│   ├── deploy-frontend.yml   # 构建并部署到 GitHub Pages
+│   └── deploy.yml            # Streamlit / Python 检查（可选）
+├── prompts/                  # 提示词与相关脚本
+├── knowledge_base/
+├── main.py / engine.py / cli.py   # Python / Streamlit 相关（可选）
+├── image_example/            # README 与文档用截图
+└── README.md
 ```
 
 ---
 
+<a id="faq"></a>
+
 ## ❓ FAQ
 
-### Q: API Key 安全吗？会被存储吗？
-**A:** API Key 存储在 GitHub Secrets 中，仅在你的浏览器本地使用，不会上传到任何第三方服务器。
+### Q: API Key 安全吗？会存到服务器吗？  
+**A:** 不会。Key 保存在你的浏览器本地；请求由浏览器直连大模型服务商。若使用 GitHub Actions 构建时配置了 Secrets，仅用于构建注入，请仍勿将 Key 提交到公开代码中。
 
-### Q: 如何部署到云端？
-**A:** 配置 GitHub Secrets 后，GitHub Actions 会自动部署到 GitHub Pages，详细步骤见 [自行部署指南](#-自行部署-fork-版本)。
+### Q: 如何部署到 GitHub Pages？  
+**A:** 见上文 [自行部署](#deploy)。
 
-### Q: MBTI 功能有什么用？
-**A:** MBTI 功能可以根据你和对方的性格类型，提供更有针对性的沟通建议。帮助理解双方性格差异，选择更适合的沟通方式。
+### Q: 支持哪些大模型？如何申请 Key？  
+**A:** 见 [在线使用](#quickstart) 中的 [支持的模型](#online-models) 与 [API 配置指南](#online-api)。
 
-### Q: 可以免费使用吗？
-**A:** 可以！部分云服务商提供新用户免费额度。
+### Q: MBTI 有什么用？  
+**A:** 可选填写你与对方的类型，分析会参考性格差异，建议更贴脸。
 
-### Q: 支持哪些对话场景？
-**A:** 目前支持：开场破冰、冷场救场、回复分析、关系推进、约会邀约等常见社交场景。
+### Q: 可以免费使用吗？  
+**A:** EchoMate 本身开源免费；大模型调用费用由各云厂商按各自规则计费，多数有新用户额度。
 
-### Q: 可以分析语音对话吗？
-**A:** 当前版本仅支持文本分析。如需分析语音，请先使用语音转文字工具转换为文本。
+### Q: 支持语音吗？  
+**A:** 当前以文本分析为主；语音请先转为文字再粘贴。
 
-### Q: 导出的报告格式是什么？
-**A:** 支持 Markdown (.md) 格式，包含完整的分析结果、MBTI 信息（如有）、对话内容和建议，方便复盘和保存。
+### Q: 导出格式？  
+**A:** 支持 Markdown（`.md`），含分析结果与建议，便于复盘。
 
-### Q: 如何反馈问题或建议？
-**A:** 欢迎在 GitHub Issues 中提交问题或交流。
+### Q: 反馈与共建？  
+**A:** 欢迎在 GitHub Issues 讨论。
 
 ---
 
@@ -438,12 +437,8 @@ MIT License
 
 <div align="center">
 
-**聊天 Debug (Chat-lock Debugger) AI Agent v2.0**
+**EchoMate** · 基于成就动机理论 × 归因训练 × 物理建模思维
 
-基于成就动机理论 × 归因训练 × 物理建模思维
-
-[⬆️ 返回顶部](#聊天-debug-chat-lock-debugger-ai-agent-v20)
+[⬆ 返回顶部](#readme)
 
 </div>
-
-

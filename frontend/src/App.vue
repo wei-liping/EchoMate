@@ -1,8 +1,17 @@
 <template>
   <div class="app">
+    <!-- 在线展示：保持「EchoMate demo」，勿在界面中显示 v1/v2 等版本号 -->
     <header class="header">
-      <h1>🔓 聊天 Debug AI Agent</h1>
+      <h1>💬 EchoMate <span class="demo-badge">demo</span></h1>
       <p class="subtitle">基于成就动机理论 × 归因训练 × 物理建模思维</p>
+      <p class="header-actions">
+        <a
+          :href="githubRepoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="header-github-link"
+        >GitHub 项目</a>
+      </p>
     </header>
 
     <main class="main">
@@ -175,11 +184,18 @@
 
     <footer class="footer">
       <div class="footer-content">
-        <p>聊天 Debug (Chat-lock Debugger) AI Agent v2.0 | 基于成就动机理论 × 归因训练 × 物理建模思维</p>
-        <a href="https://github.com/wei-liping/chat-lock-debugger" target="_blank" rel="noopener noreferrer" class="github-link" title="GitHub 项目">
+        <p class="footer-tagline">EchoMate demo · 基于成就动机理论 × 归因训练 × 物理建模思维</p>
+        <a
+          :href="githubRepoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="github-link"
+          title="在 GitHub 上查看 EchoMate 项目"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
+          <span>GitHub</span>
         </a>
       </div>
     </footer>
@@ -246,7 +262,9 @@ export default {
       error: '',
       mbtiTypes: MBTI_TYPES,
       mbtiDescriptions: MBTI_DESCRIPTIONS,
-      modelConfigs: MODEL_CONFIGS
+      modelConfigs: MODEL_CONFIGS,
+      /** 仓库地址：与 README / 部署说明一致；重命名仓库时只改此处 */
+      githubRepoUrl: 'https://github.com/wei-liping/chat-lock-debugger'
     }
   },
   mounted() {
@@ -629,9 +647,9 @@ ${mbtiInfo}
         second: '2-digit'
       }).replace(/[\/:]/g, '')
 
-      const filename = `chat-debug-report-${timestamp}.md`
+      const filename = `echomate-report-${timestamp}.md`
 
-      let md = `# 聊天 Debug AI Agent - 对话分析报告\n\n`
+      let md = `# EchoMate - 对话分析报告\n\n`
       md += `**生成时间**: ${new Date().toLocaleString('zh-CN')}\n\n`
 
       // MBTI 信息
@@ -737,6 +755,29 @@ body {
 .subtitle {
   opacity: 0.9;
   font-size: 1.1em;
+}
+
+.header h1 .demo-badge {
+  font-size: 0.72em;
+  font-weight: 600;
+  opacity: 0.88;
+  vertical-align: 0.06em;
+}
+
+.header-actions {
+  margin: 0.85rem 0 0;
+}
+
+.header-github-link {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.header-github-link:hover {
+  color: #fff;
 }
 
 .main {
@@ -1061,21 +1102,31 @@ body {
 
 .footer-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
+}
+
+.footer-tagline {
+  margin: 0;
+  max-width: 36em;
+  line-height: 1.5;
 }
 
 .github-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  color: rgba(255,255,255,0.8);
-  transition: all 0.3s;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .github-link:hover {
-  color: white;
-  transform: scale(1.1);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .github-link svg {
