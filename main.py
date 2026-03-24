@@ -1,5 +1,5 @@
 """
-聊天 Debug (Chat-lock Debugger) AI agent v1.1 - Streamlit 应用
+EchoMate AI agent v1.1 - Streamlit 应用
 生产级对话分析助手
 
 环境变量支持（用于 GitHub Secrets / Streamlit Cloud 部署）：
@@ -76,7 +76,7 @@ def generate_export_markdown(result: AnalysisResult) -> str:
     Returns:
         Markdown 格式的字符串
     """
-    md = f"""# 聊天 Debug 分析报告
+    md = f"""# EchoMate 分析报告
 
 **生成时间:** {result.timestamp}
 
@@ -175,7 +175,7 @@ def generate_export_markdown(result: AnalysisResult) -> str:
 
 ---
 
-*报告由 聊天 Debug (Chat-lock Debugger) AI agent v1.1 生成*
+*报告由 EchoMate AI agent v1.1 生成*
 """
     return md
 
@@ -192,7 +192,7 @@ def generate_export_text(result: AnalysisResult) -> str:
     """
     lines = [
         "=" * 60,
-        "聊天 Debug 分析报告",
+        "EchoMate 分析报告",
         "=" * 60,
         f"生成时间：{result.timestamp}",
         "",
@@ -254,7 +254,7 @@ def generate_export_text(result: AnalysisResult) -> str:
 # =============================================================================
 
 st.set_page_config(
-    page_title="聊天 Debug (Chat-lock Debugger) AI agent v1.1",
+    page_title="EchoMate AI agent v1.1",
     page_icon="🔓",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -460,7 +460,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 关于")
     st.markdown("""
-    **聊天 Debug (Chat-lock Debugger) AI agent v1.1**
+    **EchoMate AI agent v1.1**
 
     基于成就动机理论与归因训练原理，
     帮助突破聊天冷场困境。
@@ -534,7 +534,7 @@ if st.session_state.prev_config != current_config:
 # 主界面
 # =============================================================================
 
-st.title("🔓 聊天 Debug (Chat-lock Debugger) AI agent v1.1")
+st.title("🔓 EchoMate AI agent v1.1")
 st.markdown("""
 基于**成就动机理论**与**归因训练**原理，帮助您突破聊天冷场困境。
 
@@ -862,7 +862,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: gray; font-size: 0.9em;'>
 
-聊天 Debug (Chat-lock Debugger) AI agent v1.1 | 基于成就动机理论 × 归因训练 × 物理建模思维
+EchoMate AI agent v1.1 | 基于成就动机理论 × 归因训练 × 物理建模思维
 
 </div>
 """, unsafe_allow_html=True)

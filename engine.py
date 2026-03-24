@@ -1,5 +1,5 @@
 """
-聊天 Debug (Chat-lock Debugger) AI agent v1.1 - 核心引擎
+EchoMate AI agent v1.1 - 核心引擎
 基于成就动机理论的三层式 Prompt 链分析引擎
 
 支持的模型提供商：
@@ -177,7 +177,7 @@ class AnalysisResult:
 
 class DatingAgentEngine:
     """
-    聊天 Debug (Chat-lock Debugger) AI agent v1.1 核心引擎
+    EchoMate AI agent v1.1 核心引擎
 
     基于成就动机理论、自我妨碍理论和归因训练原理，
     通过三层式 Prompt 链分析用户对话，生成具体可执行的建议。

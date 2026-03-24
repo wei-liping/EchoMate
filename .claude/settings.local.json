@@ -22,7 +22,7 @@
       "mcp__playwright__browser_navigate",
       "Bash(git add frontend/public/.gitkeep)",
       "Bash(git commit -m \"fix: 添加 public 目录的.gitkeep 文件\")",
-      "Bash(curl -s https://api.github.com/repos/wei-liping/chat-lock-debugger/git/refs/heads/main)",
+      "Bash(curl -s https://api.github.com/repos/wei-liping/EchoMate/git/refs/heads/main)",
       "Bash(git add README.md .github/workflows/deploy-frontend.yml)",
       "Bash(git commit -m \"docs: 更新 GitHub Secrets 配置说明，支持 VITE_MODEL_NAME\")",
       "Bash(git add frontend/src/App.vue)",

@@ -65,3 +65,9 @@ coverage.xml
 # Frontend
 frontend/node_modules/
 frontend/dist/
+
+# Local docs/backups not for repo
+image_example_old/
+readme0.md
+帖子.md
+帖子_1.md
